@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView_title"
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:blurOverlayColor="@color/colorOverlay_black">
+
+    </eightbitlab.com.blurview.BlurView>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView_bottom"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        app:blurOverlayColor="@color/colorOverlay">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            app:tabIndicatorColor="@color/APPbackground"
+            app:tabIndicatorGravity="bottom"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="2dp"
+            android:paddingBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:tabTextAppearance="@style/TabLayoutStyle" />
+
+    </eightbitlab.com.blurview.BlurView>
+</FrameLayout>

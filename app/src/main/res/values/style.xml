@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RightToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#fff</item>
+        <item name="android:height">40dp</item>
+        <item name="stFont">@font/lxgw_regular</item>
+        <item name="stTextSize">20sp</item>
+        <item name="stColorBackground">@color/green</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">1dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/round_check_circle_48dp</item>
+        <item name="stLength">SHORT</item>
+        <item name="stGravity">top</item>
+        <item name="stRadius">5dp</item>
+    </style>
+
+
+    <style name="WarningToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/lxgw_regular</item>
+        <item name="stTextSize">20sp</item>
+        <item name="stColorBackground">@color/darkred</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">1dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/round_warning_48dp</item>
+        <item name="stLength">SHORT</item>
+        <item name="stGravity">top</item>
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="WelcomeToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/lxgw_regular</item>
+        <item name="stTextSize">20sp</item>
+        <item name="stColorBackground">@color/navy</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="android:height">40dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/round_welcome_48dp</item>
+        <item name="stLength">LONG</item>
+        <item name="stGravity">top</item>
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="GoodbyeToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/lxgw_regular</item>
+        <item name="stTextSize">20sp</item>
+        <item name="stColorBackground">@color/orange</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/round_goodbye_48dp</item>
+        <item name="stLength">LONG</item>
+        <item name="stGravity">top</item>
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:fontFamily">@font/lxgw_bold</item>
+        <item name="android:titleTextColor">@color/white</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+    <style name="TabLayoutStyle">
+        <item name="android:fontFamily">@font/lxgw_bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="BottomSheetSpinnerItemStyle" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/lxgw_regular</item>
+    </style>
+
+</resources>

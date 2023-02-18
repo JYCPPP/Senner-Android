@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.camera.view.PreviewView
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:scaleType="fillStart"/>
+
+            <com.example.senner.UI.OverlayView
+                android:id="@+id/overlay"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+
+        </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/APPbackground"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/card_background"
+                android:padding="30dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/round_arrow_up_48dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/tfl2_logo_dark" />
+
+                <!-- Inference time row -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/inference_time_label"
+                        android:text="Inference Time"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/inference_time_val"
+                        android:text="0ms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+
+                <!-- ML confidence threshold adjustment row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Threshold"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/threshold_minus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_remove" />
+
+                        <TextView
+                            android:id="@+id/threshold_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minEms="3"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="0.50"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/threshold_plus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_add"  />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+
+                <!-- ML max results adjustment row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Max Results"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/max_results_minus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_remove" />
+                        <TextView
+                            android:id="@+id/max_results_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minEms="3"
+                            android:gravity="center"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="3"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/max_results_plus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_add" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+                <!-- Number of threads adjustment row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Threads"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:textSize="16sp"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/threads_minus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_remove" />
+
+                        <TextView
+                            android:id="@+id/threads_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:gravity="center"
+                            android:minEms="3"
+                            android:text="2"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/threads_plus"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@color/transparent"
+                            android:src="@drawable/ic_baseline_add" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+                <!-- Delegate selection row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Delegate"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinner_delegate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:minWidth="150dp"
+                        android:entries="@array/delegate_spinner_titles"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown"
+                        android:backgroundTint="@color/black"
+                        android:theme="@style/BottomSheetSpinnerItemStyle" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+
+                <!-- Model selection row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+
+                    <TextView
+                        android:text="Model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:textColor="@color/black" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinner_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:backgroundTint="@color/black"
+                        android:entries="@array/models_spinner_titles"
+                        android:minWidth="150dp"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown"
+                        android:theme="@style/BottomSheetSpinnerItemStyle" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Location"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/location"
+                        android:text="0ms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
