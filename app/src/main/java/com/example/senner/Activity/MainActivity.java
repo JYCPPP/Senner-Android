@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Fragment> fragments;
     private ArrayList<Drawable> icons;
     private ViewPageAdapter viewPageAdapter;
-
-    private BlurView blurView_title;
     private BlurView blurView_bottom;
     private ViewGroup root;
 
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
 
         //设置高斯模糊
-        blurView_title = findViewById(R.id.blurView_title);
         blurView_bottom = findViewById(R.id.blurView_bottom);
         root = findViewById(R.id.root);
         setupBlurView();
@@ -85,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
         final Drawable windowBackground = getWindow().getDecorView().getBackground();
         BlurAlgorithm algorithm = getBlurAlgorithm();
 
-        blurView_title.setupWith(root, algorithm)
-                .setFrameClearDrawable(windowBackground)
-                .setBlurRadius(radius);
 
         blurView_bottom.setupWith(root, algorithm)
                 .setFrameClearDrawable(windowBackground)

@@ -321,30 +321,31 @@ public class SensorsFragment extends Fragment {
     }
 
     private void InitArrayList() {
-        linearaccX = new ArrayList<>();
-        linearaccY = new ArrayList<>();
-        linearaccZ = new ArrayList<>();
-        accX = new ArrayList<>();
-        accY = new ArrayList<>();
-        accZ = new ArrayList<>();
-        gyroX = new ArrayList<>();
-        gyroY = new ArrayList<>();
-        gyroZ = new ArrayList<>();
-        rotX = new ArrayList<>();
-        rotY = new ArrayList<>();
-        rotZ = new ArrayList<>();
-        mrotX = new ArrayList<>();
-        mrotY = new ArrayList<>();
-        mrotZ = new ArrayList<>();
-        magX = new ArrayList<>();
-        magY = new ArrayList<>();
-        magZ = new ArrayList<>();
-        step = new ArrayList<>();
-        proximity = new ArrayList<>();
-        light = new ArrayList<>();
-        temperature = new ArrayList<>();
-        pressure = new ArrayList<>();
-        humidity = new ArrayList<>();
+        //分配初始容量来保证性能
+        linearaccX = new ArrayList<>(10000);
+        linearaccY = new ArrayList<>(10000);
+        linearaccZ = new ArrayList<>(10000);
+        accX = new ArrayList<>(10000);
+        accY = new ArrayList<>(10000);
+        accZ = new ArrayList<>(10000);
+        gyroX = new ArrayList<>(10000);
+        gyroY = new ArrayList<>(10000);
+        gyroZ = new ArrayList<>(10000);
+        rotX = new ArrayList<>(10000);
+        rotY = new ArrayList<>(10000);
+        rotZ = new ArrayList<>(10000);
+        mrotX = new ArrayList<>(10000);
+        mrotY = new ArrayList<>(10000);
+        mrotZ = new ArrayList<>(10000);
+        magX = new ArrayList<>(10000);
+        magY = new ArrayList<>(10000);
+        magZ = new ArrayList<>(10000);
+        step = new ArrayList<>(10000);
+        proximity = new ArrayList<>(10000);
+        light = new ArrayList<>(10000);
+        temperature = new ArrayList<>(10000);
+        pressure = new ArrayList<>(10000);
+        humidity = new ArrayList<>(10000);
     }
 
     /**

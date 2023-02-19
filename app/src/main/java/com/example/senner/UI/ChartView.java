@@ -1,6 +1,7 @@
 package com.example.senner.UI;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -99,9 +100,10 @@ public class ChartView {
         xAxis.setAxisLineColor(Color.BLACK); // 坐标轴颜色，默认GRAY
         xAxis.setTextColor(Color.BLACK); //刻度文字颜色
         xAxis.setGridColor(Color.BLACK);   // 网格线颜色，默认GRAY
-        xAxis.setTextSize(12);
+        xAxis.setTextSize(12f);
         xAxis.setGridLineWidth(1); // 网格线宽度，dp，默认1dp
         xAxis.setAxisLineWidth(2);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.enableGridDashedLine(20, 10, 1);
 
         YAxis yAxis = lineChart.getAxisLeft(); // 获取Y轴,mLineChart.getAxis(YAxis.AxisDependency.LEFT);也可以获取Y轴
@@ -115,7 +117,6 @@ public class ChartView {
         yAxis.setAxisMinimum(MinValue);
         yAxis.enableGridDashedLine(20, 10, 1);    // 网格线为虚线，lineLength，每段实线长度,spaceLength,虚线间隔长度，phase，起始点（进过测试，最后这个参数也没看出来干啥的）
 
-
         //图例相关
         Legend legend = lineChart.getLegend(); // 获取图例，但是在数据设置给chart之前是不可获取的
         legend.setEnabled(true);    // 是否绘制图例
@@ -126,7 +127,8 @@ public class ChartView {
         legend.setMaxSizePercent(1f); // 设置，默认0.95f,图例最大尺寸区域占图表区域之外的比例
         legend.setForm(Legend.LegendForm.SQUARE);   // 设置图例的形状，SQUARE, CIRCLE 或者 LINE
         legend.setXEntrySpace(6);  // 设置水平图例间间距，默认6dp
-        legend.setYEntrySpace(0);  // 设置垂直图例间间距，默认0
+        legend.setYEntrySpace(6);  // 设置垂直图例间间距，默认0
+        legend.setYOffset(5f);
         legend.setFormToTextSpace(5);    // 设置图例的标签与图形之间的距离，默认5dp
         legend.setWordWrapEnabled(true);   // 图标单词是否适配。只有在底部才会有效，
         legend.setCustom(legendEntries);
@@ -195,18 +197,6 @@ public class ChartView {
                                    int color0, int color1, int color2,
                                     boolean isShowValueText)
     {
-//        //设置自动清零时间
-//        if(nClearSize == 0)
-//            nClearSize = 999999999;
-//        if (Values.size() > nClearSize)
-//        {
-//            Values.clear();
-//            //设置Y轴居于左侧
-//            YAxis lighty = chart.getAxisLeft();
-//            //设置轴线最大值最小值
-//            lighty.setAxisMaximum(0);
-//            lighty.setAxisMinimum(0);
-//        }
 
         Values0.add(new Entry(Values0.size(),value0));
         Values1.add(new Entry(Values1.size(),value1));
@@ -238,7 +228,7 @@ public class ChartView {
             set0.setValueTextColor(color0);
             set0.setDrawIcons(true);
             set0.setCircleColor(color0);
-            set0.setLineWidth(1f);
+            set0.setLineWidth(2f);
             set0.setCircleRadius(3f);
 
             set1 = new LineDataSet(Values1, string1);
@@ -247,7 +237,7 @@ public class ChartView {
             set1.setValueTextColor(color1);
             set1.setDrawIcons(true);
             set1.setCircleColor(color1);
-            set1.setLineWidth(1f);
+            set1.setLineWidth(2f);
             set1.setCircleRadius(3f);
 
             set2 = new LineDataSet(Values2, string2);
@@ -256,7 +246,7 @@ public class ChartView {
             set2.setValueTextColor(color2);
             set2.setDrawIcons(true);
             set2.setCircleColor(color2);
-            set2.setLineWidth(1f);
+            set2.setLineWidth(2f);
             set2.setCircleRadius(3f);
 
             if(!isShowValueText) {
@@ -296,7 +286,139 @@ public class ChartView {
         //redraw
         chart.invalidate();
     }
+    /**
+     *
+     * @param chart 所需传数据折线图
+     * @param Values0 储存第一组数据的列表
+     * @param Values1 储存第二组数据的列表
+     * @param string0 第一组数据名称
+     * @param string1 第二组数据名称
+     * @param color0 第一组折线颜色
+     * @param color1 第二组折线颜色
+     * @param isShowValueText 是否显示数据
+     */
+    public void SetDisplacementChartData(LineChart chart,
+                                 ArrayList<Entry> Values0, ArrayList<Entry> Values1,
+                                 String string0, String string1,
+                                 int color0, int color1,
+                                 boolean isShowValueText)
+    {
+        //设置曲线
+        Log.e("chart", String.valueOf(Values0));
+        Log.e("chart", String.valueOf(Values1));
+        LineDataSet set0, set1;
+        Log.e("chart", "loc1");
+        if (chart.getData() != null && chart.getData().getDataSetCount() >= 0) {
+            Log.e("chart", "loc2");
+            set0 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set0.setValues(Values0);
 
+            set1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+            set1.setValues(Values1);
+
+
+        } else {
+            Log.e("chart", "loc3");
+            set0 = new LineDataSet(Values0, string0);
+            set0.setValueTextSize(3f);
+            set0.setColor(color0);
+            set0.setValueTextColor(color0);
+            set0.setDrawIcons(true);
+            set0.setCircleColor(color0);
+            set0.setLineWidth(2f);
+            set0.setCircleRadius(3f);
+
+            set1 = new LineDataSet(Values1, string1);
+            set1.setValueTextSize(3f);
+            set1.setColor(color1);
+            set1.setValueTextColor(color1);
+            set1.setDrawIcons(true);
+            set1.setCircleColor(color1);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+
+            if(!isShowValueText) {
+                set0.setValueTextSize(0);
+                set1.setValueTextSize(0);
+            }
+
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            //都添加进列表中
+            dataSets.add(set0);
+            dataSets.add(set1);
+            LineData lineData;
+
+            lineData = new LineData(dataSets);
+            chart.setData(lineData);
+            Log.e("chart", "loc4");
+            Log.e("chart", String.valueOf(lineData));
+        }
+        //set Max and Min Y value
+        YAxis y = chart.getAxisLeft();
+        XAxis x = chart.getXAxis();
+
+        float XMax = x.getAxisMinimum();
+        float XMin = x.getAxisMaximum();
+        float YMax = y.getAxisMaximum();
+        float YMin = y.getAxisMinimum();
+
+        //遍历找到
+        float maxCenterX = 0;
+        float maxTimeX = 0;
+        for (Entry entry : Values0) {
+            if (entry.getY() > maxCenterX) {
+                maxCenterX = entry.getY();
+            }
+            if(entry.getX() > maxTimeX){
+                maxTimeX = entry.getX();
+            }
+        }
+
+        //遍历找到
+        float maxCenterY = 0;
+        float maxTimeY = 0;
+        for (Entry entry : Values1) {
+            if (entry.getY() > maxCenterY) {
+                maxCenterY = entry.getY();
+            }
+            if(entry.getX() > maxTimeY){
+                maxTimeY = entry.getX();
+            }
+        }
+
+        float CenterMax = Math.max(maxCenterX, maxCenterY);
+        float CenterMin = Math.min(maxCenterX, maxCenterY);
+        float TimeMax = Math.max(maxTimeX, maxTimeY);
+        float TimeMin = Math.min(maxTimeX, maxTimeY);
+
+        float nExpend = 1;//保证曲线始终全部显示
+
+        if(YMax == 0 && YMin == 0 && XMax == 0 && XMin == 0){
+            x.setAxisMinimum(TimeMin - nExpend);
+            x.setAxisMaximum(TimeMax + nExpend);
+            y.setAxisMaximum(CenterMax + nExpend);
+            y.setAxisMinimum(CenterMin - nExpend);
+        }else {
+            if(TimeMax > XMax){
+                x.setAxisMaximum(TimeMax + nExpend);
+            }
+            if(TimeMin < XMin){
+                x.setAxisMinimum(TimeMin - nExpend);
+            }
+            if (CenterMax > YMax) {
+                y.setAxisMaximum(CenterMax + nExpend);
+            }
+            if (CenterMin < YMin) {
+                y.setAxisMinimum(CenterMin - nExpend);
+            }
+        }
+        Log.e("chart", String.valueOf(TimeMin));
+        Log.e("chart", String.valueOf(TimeMax));
+        Log.e("chart", String.valueOf(CenterMax));
+        Log.e("chart", String.valueOf(CenterMin));
+        //redraw
+        chart.invalidate();
+    }
     /**
      *
      * @param chart 所需传入数据折线图
@@ -314,18 +436,6 @@ public class ChartView {
                                  boolean isShowValueText)
     {
 
-//        //设置自动清零时间
-//        if(nClearSize == 0)
-//            nClearSize = 999999999;
-//        if (Values.size() > nClearSize)
-//        {
-//            Values.clear();
-//            //设置Y轴居于左侧
-//            YAxis lighty = chart.getAxisLeft();
-//            //设置轴线最大值最小值
-//            lighty.setAxisMaximum(0);
-//            lighty.setAxisMinimum(0);
-//        }
 
         Values.add(new Entry(Values.size(),value));
 
@@ -347,7 +457,7 @@ public class ChartView {
             set.setValueTextColor(color);
             set.setDrawIcons(true);
             set.setCircleColor(color);
-            set.setLineWidth(1f);
+            set.setLineWidth(2f);
             set.setCircleRadius(3f);
 
             if(!isShowValueText) {

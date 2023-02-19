@@ -12,15 +12,6 @@
         android:layout_height="match_parent"/>
 
     <eightbitlab.com.blurview.BlurView
-        android:id="@+id/blurView_title"
-        android:layout_gravity="top"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        app:blurOverlayColor="@color/colorOverlay_black">
-
-    </eightbitlab.com.blurview.BlurView>
-
-    <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurView_bottom"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
