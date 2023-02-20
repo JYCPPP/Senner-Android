@@ -35,7 +35,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ImageAnalyse implements ImageAnalysis.Analyzer {
 
-
+//static int SCREEN_WIDTH = 1260;
+//static int SCREEN_HEIGHT = 2800;
 
     public static class Result{
 
