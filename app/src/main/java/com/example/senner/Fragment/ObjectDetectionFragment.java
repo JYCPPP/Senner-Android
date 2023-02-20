@@ -2,11 +2,15 @@ package com.example.senner.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,7 +39,10 @@ import com.example.senner.UI.ChartView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.listener.OnDrawListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +74,6 @@ public final class ObjectDetectionFragment extends Fragment  {
     private boolean IsClickRecording = false;
     private LineChart disChart;
     private ChartView chartView = new ChartView();
-    private ArrayList<Entry> PixLocationX,PixLocationY;
 
 
 
@@ -136,8 +142,8 @@ public final class ObjectDetectionFragment extends Fragment  {
         recordButton = view.findViewById(R.id.btn_record);
         //初始化折线图，设置图例
         disChart = view.findViewById(R.id.disChart);
-        LegendEntry legendEntry_locX = new LegendEntry("LocationX(pixel)", Legend.LegendForm.LINE, 12f, 2f, null, Color.RED);
-        LegendEntry legendEntry_locY = new LegendEntry("LocationY(pixel)", Legend.LegendForm.LINE, 12f, 2f, null, Color.BLUE);
+        LegendEntry legendEntry_locX = new LegendEntry("LocationX(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.RED);
+        LegendEntry legendEntry_locY = new LegendEntry("LocationY(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.BLUE);
         List<LegendEntry> entries_location = new ArrayList<>();
         entries_location.add(legendEntry_locX);
         entries_location.add(legendEntry_locY);
@@ -176,20 +182,36 @@ public final class ObjectDetectionFragment extends Fragment  {
 
     }
 
+    /**
+     * 点击按钮开始记录位移，需要依次处理的事件是：振动、更改图标、记录开始点击时间、记录完毕绘制图表
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void SetRecordEvent() {
 
         recordButton.setOnClickListener(v -> {
 
+            // 获取系统的Vibrator服务
+            Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
+            // 检查是否支持震动
+            if (vibrator.hasVibrator()) {
+
+                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE);
+                // 让手机震动
+                vibrator.vibrate(vibrationEffect);
+            }
+
             if(!IsClickRecording){
+                //保证绘制完毕再清除
+                imageAnalyse.clearLocation();
                 IsClickRecording = true;
-                recordButton.setBackground(requireActivity().getDrawable(R.drawable.outline_stop_48dp));
+                recordButton.setBackground(requireActivity().getDrawable(R.drawable.twotone_stop_36dp));
                 imageAnalyse.record = System.currentTimeMillis();
                 imageAnalyse.IsRecording = true;
 
             }else {
                 IsClickRecording = false;
-                recordButton.setBackground(requireActivity().getDrawable(R.drawable.outline_record_48dp));
+                recordButton.setBackground(requireActivity().getDrawable(R.drawable.twotone_record_36dp));
                 imageAnalyse.IsRecording = false;
                 ShowDisLineChart();
             }
@@ -197,13 +219,12 @@ public final class ObjectDetectionFragment extends Fragment  {
 
     }
 
+    /**
+     *依次实现以下功能：拿到imageAnalyse记录的框位移数据、将数据赋给表格、清除所有历史数据
+     */
     private void ShowDisLineChart() {
 
-        PixLocationX = new ArrayList<>(imageAnalyse.getLocationX());
-        PixLocationY = new ArrayList<>(imageAnalyse.getLocationY());
-
-        chartView.SetDisplacementChartData(disChart, PixLocationX, PixLocationY , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.BLUE, true);
-        //imageAnalyse.clearLocation();
+        chartView.SetDisplacementChartData(disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.BLUE, true);
 
     }
 

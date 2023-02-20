@@ -229,7 +229,7 @@ public class ChartView {
             set0.setDrawIcons(true);
             set0.setCircleColor(color0);
             set0.setLineWidth(2f);
-            set0.setCircleRadius(3f);
+            set0.setCircleRadius(2f);
 
             set1 = new LineDataSet(Values1, string1);
             set1.setValueTextSize(3f);
@@ -238,7 +238,7 @@ public class ChartView {
             set1.setDrawIcons(true);
             set1.setCircleColor(color1);
             set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
+            set1.setCircleRadius(2f);
 
             set2 = new LineDataSet(Values2, string2);
             set2.setValueTextSize(3f);
@@ -247,7 +247,7 @@ public class ChartView {
             set2.setDrawIcons(true);
             set2.setCircleColor(color2);
             set2.setLineWidth(2f);
-            set2.setCircleRadius(3f);
+            set2.setCircleRadius(2f);
 
             if(!isShowValueText) {
                 set0.setValueTextSize(0);
@@ -303,56 +303,46 @@ public class ChartView {
                                  int color0, int color1,
                                  boolean isShowValueText)
     {
-        //设置曲线
-        Log.e("chart", String.valueOf(Values0));
-        Log.e("chart", String.valueOf(Values1));
+//        // Clear previous chart data
+//        chart.clear();
+//        chart.notifyDataSetChanged();
+//        chart.invalidate();
+
         LineDataSet set0, set1;
-        Log.e("chart", "loc1");
-        if (chart.getData() != null && chart.getData().getDataSetCount() >= 0) {
-            Log.e("chart", "loc2");
-            set0 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set0.setValues(Values0);
 
-            set1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-            set1.setValues(Values1);
+        set0 = new LineDataSet(Values0, string0);
+        set0.setValueTextSize(3f);
+        set0.setColor(color0);
+        set0.setValueTextColor(color0);
+        set0.setDrawIcons(true);
+        set0.setCircleColor(color0);
+        set0.setLineWidth(2f);
+        set0.setCircleRadius(2f);
 
+        set1 = new LineDataSet(Values1, string1);
+        set1.setValueTextSize(3f);
+        set1.setColor(color1);
+        set1.setValueTextColor(color1);
+        set1.setDrawIcons(true);
+        set1.setCircleColor(color1);
+        set1.setLineWidth(2f);
+        set1.setCircleRadius(2f);
 
-        } else {
-            Log.e("chart", "loc3");
-            set0 = new LineDataSet(Values0, string0);
-            set0.setValueTextSize(3f);
-            set0.setColor(color0);
-            set0.setValueTextColor(color0);
-            set0.setDrawIcons(true);
-            set0.setCircleColor(color0);
-            set0.setLineWidth(2f);
-            set0.setCircleRadius(3f);
-
-            set1 = new LineDataSet(Values1, string1);
-            set1.setValueTextSize(3f);
-            set1.setColor(color1);
-            set1.setValueTextColor(color1);
-            set1.setDrawIcons(true);
-            set1.setCircleColor(color1);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-
-            if(!isShowValueText) {
-                set0.setValueTextSize(0);
-                set1.setValueTextSize(0);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            //都添加进列表中
-            dataSets.add(set0);
-            dataSets.add(set1);
-            LineData lineData;
-
-            lineData = new LineData(dataSets);
-            chart.setData(lineData);
-            Log.e("chart", "loc4");
-            Log.e("chart", String.valueOf(lineData));
+        if(!isShowValueText) {
+            set0.setValueTextSize(0);
+            set1.setValueTextSize(0);
         }
+
+        //添加新数据
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        //都添加进列表中
+        dataSets.add(set0);
+        dataSets.add(set1);
+
+        LineData lineData = new LineData(dataSets);
+        chart.setData(lineData);
+        chart.notifyDataSetChanged();
+
         //set Max and Min Y value
         YAxis y = chart.getAxisLeft();
         XAxis x = chart.getXAxis();
@@ -365,6 +355,8 @@ public class ChartView {
         //遍历找到
         float maxCenterX = 0;
         float maxTimeX = 0;
+        float minCenterX = 0;
+        float minTimeX = 0;
         for (Entry entry : Values0) {
             if (entry.getY() > maxCenterX) {
                 maxCenterX = entry.getY();
@@ -372,11 +364,19 @@ public class ChartView {
             if(entry.getX() > maxTimeX){
                 maxTimeX = entry.getX();
             }
+            if(entry.getY() < minCenterX){
+                minCenterX = entry.getY();
+            }
+            if(entry.getX() < minTimeX){
+                minTimeX = entry.getX();
+            }
         }
 
         //遍历找到
         float maxCenterY = 0;
         float maxTimeY = 0;
+        float minCenterY = 0;
+        float minTimeY = 0;
         for (Entry entry : Values1) {
             if (entry.getY() > maxCenterY) {
                 maxCenterY = entry.getY();
@@ -384,12 +384,18 @@ public class ChartView {
             if(entry.getX() > maxTimeY){
                 maxTimeY = entry.getX();
             }
+            if(entry.getY() < minCenterY){
+                minCenterY = entry.getY();
+            }
+            if(entry.getX() < minTimeY){
+                minTimeY = entry.getX();
+            }
         }
 
         float CenterMax = Math.max(maxCenterX, maxCenterY);
-        float CenterMin = Math.min(maxCenterX, maxCenterY);
+        float CenterMin = Math.min(minCenterX, minCenterY);
         float TimeMax = Math.max(maxTimeX, maxTimeY);
-        float TimeMin = Math.min(maxTimeX, maxTimeY);
+        float TimeMin = Math.min(minTimeX, minTimeY);
 
         float nExpend = 1;//保证曲线始终全部显示
 
@@ -412,10 +418,7 @@ public class ChartView {
                 y.setAxisMinimum(CenterMin - nExpend);
             }
         }
-        Log.e("chart", String.valueOf(TimeMin));
-        Log.e("chart", String.valueOf(TimeMax));
-        Log.e("chart", String.valueOf(CenterMax));
-        Log.e("chart", String.valueOf(CenterMin));
+
         //redraw
         chart.invalidate();
     }
@@ -458,7 +461,7 @@ public class ChartView {
             set.setDrawIcons(true);
             set.setCircleColor(color);
             set.setLineWidth(2f);
-            set.setCircleRadius(3f);
+            set.setCircleRadius(2f);
 
             if(!isShowValueText) {
                 set.setValueTextSize(0);

@@ -1,5 +1,6 @@
 package com.example.senner.Helper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -79,11 +80,15 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     }
 
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void analyze(@NonNull ImageProxy image) {
         int previewHeight = previewView.getHeight();
         int previewWidth = previewView.getWidth();
 
+        //计算出屏幕毫米：像素
+        float[] ScreenRatio = CaculateScale(activity, previewWidth, previewHeight);
+        
         // 这里Observable将image analyse的逻辑放到子线程计算, 渲染UI的时候再拿回来对应的数据, 避免前端UI卡顿
         Observable.create( (ObservableEmitter<Result> emitter) -> {
                     long start = System.currentTimeMillis();
@@ -168,9 +173,8 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                         RectF location = res.getLocation();
 
                         if(IsRecording){
-                            Log.e("time", String.valueOf((float) start));
-                            LocationX.add(new Entry((float) (start - record), location.centerX()));
-                            LocationY.add(new Entry((float) (start - record), location.centerY()));
+                            LocationX.add(new Entry((float) (start - record), location.centerX() * ScreenRatio[0]));
+                            LocationY.add(new Entry((float) (start - record), location.centerY() * ScreenRatio[1]));
                         }
                         String label = res.getLabelName();
                         float confidence = res.getConfidence();
@@ -189,7 +193,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                 .subscribe((Result result) -> {
                     boxLabelCanvas.setImageBitmap(result.bitmap);
                     frameSizeTextView.setText(previewHeight + "x" + previewWidth);
-                    inferenceTimeTextView.setText(Long.toString(result.costTime) + "ms");
+                    inferenceTimeTextView.setText(result.costTime + "ms");
                 });
 
     }
@@ -205,7 +209,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     }
 
 
-    private void CaculateDisplacement(Activity activity, int previewWidth, int previewHeight) {
+    private float[] CaculateScale(Activity activity, int previewWidth, int previewHeight) {
 
         //计算屏幕像素与物理尺寸的比例
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -215,24 +219,15 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
         float widthInInches = displayMetrics.widthPixels / displayMetrics.xdpi;
         float heightInInches = displayMetrics.heightPixels / displayMetrics.ydpi;
 
-        //float widthInCm = widthInInches * 2.54f; // 英寸转厘米
         float heightInMm = heightInInches * 25.4f; // 英寸转毫米
         float widthInMm = widthInInches * 25.4f;
         Log.e("Screen Size", Arrays.toString(new float[]{widthInMm, heightInMm}));
 
         float scaleX = widthInMm / previewWidth;
         float scaleY = heightInMm / previewHeight;
-
-
-
-
-
-
-
-
-        //计算位移
-        //return new float[]{(curX - prevX) * scaleX, (curY - prevY) * scaleY};
-
+        
+        return new float[]{scaleX, scaleY};
+        
     }
 
 }
