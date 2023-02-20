@@ -205,13 +205,13 @@ public final class ObjectDetectionFragment extends Fragment  {
                 //保证绘制完毕再清除
                 imageAnalyse.clearLocation();
                 IsClickRecording = true;
-                recordButton.setBackground(requireActivity().getDrawable(R.drawable.twotone_stop_36dp));
+                recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_stop_36dp));
                 imageAnalyse.record = System.currentTimeMillis();
                 imageAnalyse.IsRecording = true;
 
             }else {
                 IsClickRecording = false;
-                recordButton.setBackground(requireActivity().getDrawable(R.drawable.twotone_record_36dp));
+                recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_record_36dp));
                 imageAnalyse.IsRecording = false;
                 ShowDisLineChart();
             }

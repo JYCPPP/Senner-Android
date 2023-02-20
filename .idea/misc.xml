@@ -3,9 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/card_background.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/ic_baseline_remove.xml" value="0.2075" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/outline_record_48dp.xml" value="0.2075" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/outline_stop_48dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_new_folder_48dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_record_36dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_sensors_36dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_settings_ethernet_36dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_stop_36dp.xml" value="0.2075" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/round_stop_48dp.xml" value="0.2075" />
+        <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/twotone_record_36dp.xml" value="0.2075" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/drawable/twotone_stop_36dp.xml" value="0.2075" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/layout/activity_main.xml" value="0.2557291666666667" />
         <entry key="..\:/Users/ASUA/AndroidStudioProjects/Senner-Android/app/src/main/res/layout/fragment_object_detection.xml" value="0.25" />

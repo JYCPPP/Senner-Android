@@ -28,11 +28,11 @@
 
         <Button
             android:id="@+id/btn_record"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="600dp"
-            android:background="@drawable/outline_record_48dp"/>
+            android:layout_marginTop="650dp"
+            android:background="@drawable/round_record_36dp"/>
 
     </FrameLayout>
     <FrameLayout
@@ -68,7 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:padding="10dp"
-                    android:src="@drawable/tfl2_logo_dark" />
+                    android:src="@drawable/tfl2_logo"
+                    app:tint="@color/darkorange" />
 
                 <LinearLayout
                     android:id="@+id/layout2"
