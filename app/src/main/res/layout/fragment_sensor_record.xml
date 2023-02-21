@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <View
                     android:id="@+id/cardimage_linearacc"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/lxgw_bold"
                         android:paddingTop="10dp"
                         android:paddingStart="5dp"
@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lxgw_regular"
                         android:padding="5dp"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <View
                     android:id="@+id/cardimage_acc"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/lxgw_bold"
                         android:paddingTop="10dp"
                         android:paddingStart="5dp"
@@ -120,11 +120,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lxgw_regular"
                         android:padding="5dp"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-                        tools:ignore="RtlHardcoded" />
+                        android:textSize="14sp" />
                     <TextView
                         android:id="@+id/accelerationData"
                         android:layout_width="match_parent"
@@ -155,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <View
                     android:id="@+id/cardimage_gyro"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
@@ -171,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/lxgw_bold"
                         android:paddingTop="10dp"
                         android:paddingStart="5dp"
@@ -189,8 +188,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-                        tools:ignore="RtlHardcoded" />
+                        android:textSize="14sp" />
                     <TextView
                         android:id="@+id/gyroscopeData"
                         android:layout_width="match_parent"
@@ -215,9 +213,605 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <View
+                    android:id="@+id/cardimage_rotation"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkorange" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_rotation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Rotation Vector Sensor"
+                        android:textColor="@color/darkorange"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_rotation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/rotationData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/rotationChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_magnetic_rotation"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkviolet" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_magnetic_rotation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Geomagnetic Rotation Vector Sensor"
+                        android:textColor="@color/darkviolet"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_magnetic_rotation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/magnetic_rotationData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/magnetic_rotationChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_magnetic"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkolivegreen" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_magnetic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Magnetic Field Sensor"
+                        android:textColor="@color/darkolivegreen"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_magnetic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="start"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/magneticData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/magneticChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_proximity"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkgoldenrod" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_proximity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Proximity Sensor"
+                        android:textColor="@color/darkgoldenrod"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_proximity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/proximityData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/proximityChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_light"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkslateblue" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Light Sensor"
+                        android:textColor="@color/darkslateblue"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="start"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/lightSensorData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/lightChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_temp"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/colorAccent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Ambient Temperature Sensor"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tempSensorData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/tempChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_pressure"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkgray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/cardname_pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Pressure Sensor"
+                        android:textColor="@color/darkgray"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/pressureSensorData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/pressureChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_step"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkcyan" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/cardname_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Step Counter"
+                        android:textColor="@color/darkcyan"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="left"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/stepData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/stepChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="50dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/card_background"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardimage_humidity"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:src="@color/darkturquoise" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/cardname_humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/lxgw_bold"
+                        android:paddingTop="10dp"
+                        android:paddingStart="5dp"
+                        android:text="Humidity Sensor"
+                        android:textColor="@color/darkturquoise"
+                        android:textSize="18sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/carddescription_humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:padding="5dp"
+                        android:layout_gravity="start"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/humiditySensorData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:gravity="start"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/humidityChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="20dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
+
+
 
 </FrameLayout>

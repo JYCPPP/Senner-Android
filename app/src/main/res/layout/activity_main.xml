@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -30,4 +31,1957 @@
             app:tabTextAppearance="@style/TabLayoutStyle" />
 
     </eightbitlab.com.blurview.BlurView>
+
+
+    <FrameLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/APPbackground"/>
+
+        <ScrollView
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="60dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/card_background"
+            android:padding="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="60sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/lxgw_bold"
+                    android:layout_gravity="start" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="New Project: "
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <EditText
+                            android:id="@+id/et_projectName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/underline"
+                            android:textColorHint="@color/gray"
+                            android:gravity="end"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:inputType="textNoSuggestions" />
+                    </LinearLayout>
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Sensors: "
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:paddingStart="20dp"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="Linear Accelerometer "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp" />
+
+                            <CheckBox
+                                android:id="@+id/cb_linearacc"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/black"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/option_linearacc_need_Thresh"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="visible"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="40dp"
+                                android:text="Need Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <CheckBox
+                                android:id="@+id/cb_linearacc_need_thresh"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/black"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/option_linearacc_Thresh"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:paddingStart="60dp"
+                                    android:text="Thresh X "
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+
+                                <EditText
+                                    android:id="@+id/et_linearacc_threshX"
+                                    android:layout_width="0dp"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black"
+                                    android:gravity="end"
+                                    android:textColorHint="@color/gray"
+                                    android:background="@drawable/underline"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="numberDecimal"
+                                    android:buttonTint="@color/black"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:text=" m/s^2"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:paddingStart="60dp"
+                                    android:text="Thresh Y "
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+
+                                <EditText
+                                    android:id="@+id/et_linearacc_threshY"
+                                    android:layout_width="0dp"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black"
+                                    android:gravity="end"
+                                    android:textColorHint="@color/gray"
+                                    android:background="@drawable/underline"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="numberDecimal"
+                                    android:buttonTint="@color/black"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:text=" m/s^2"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:paddingStart="60dp"
+                                    android:text="Thresh Z "
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+
+                                <EditText
+                                    android:id="@+id/et_linearacc_threshZ"
+                                    android:layout_width="0dp"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black"
+                                    android:gravity="end"
+                                    android:textColorHint="@color/gray"
+                                    android:background="@drawable/underline"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="numberDecimal"
+                                    android:buttonTint="@color/black"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lxgw_regular"
+                                    android:text=" m/s^2"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    tools:ignore="RtlSymmetry" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Accelerometer "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_acc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_acc_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_acc_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_acc_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh X "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_acc_threshX"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" m/s^2"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Y "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_acc_threshY"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" m/s^2"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Z "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_acc_threshZ"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" m/s^2"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Gyroscope "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_gyro"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_gyro_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_gyro_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_gyro_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh X "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_gyro_threshX"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" °"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Y "
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_gyro_threshY"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" °"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Z "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_gyro_threshZ"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" °"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Rotation Vector Sensor "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_rot"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_rot_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_rot_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_rot_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh X "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_rot_threshX"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Y "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_rot_threshY"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Z "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_rot_threshZ"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Geomagnetic Rotation Vector"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_mrot"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_mrot_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_mrot_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_mrot_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh X "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mrot_threshX"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Y "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mrot_threshY"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Z "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mrot_threshZ"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Magnetic Field Sensor"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_mag"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_mag_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_mag_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_mag_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh X "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mag_threshX"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" μT"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Y "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mag_threshY"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" μT"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh Z "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_mag_threshZ"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" μT"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Proximity Sensor"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_proximity"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_proximity_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_proximity_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_proximity_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_proximity_thresh"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" cm"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:paddingStart="20dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Light Sensor"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_light"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/black"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option_light_need_Thresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:paddingStart="40dp"
+                        android:text="Need Thresh "
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <CheckBox
+                        android:id="@+id/cb_light_need_thresh"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/black"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option_light_Thresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:paddingStart="60dp"
+                        android:text="Thresh "
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <EditText
+                        android:id="@+id/et_light_thresh"
+                        android:layout_width="0dp"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:gravity="end"
+                        android:textColorHint="@color/gray"
+                        android:background="@drawable/underline"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:buttonTint="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text=" lux"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Ambient Temperature Sensor"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_temp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_temp_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_temp_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_temp_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_temp_thresh"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" ℃"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Pressure Sensor"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_pressure"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_pressure_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_pressure_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_pressure_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_pressure_thresh"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" kPa"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Humidity Sensor"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:id="@+id/cb_humidity"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_humidity_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_humidity_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_humidity_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_humidity_thresh"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text=" %"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:paddingStart="20dp"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:text="Step Counter"
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_step"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_step_need_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:fontFamily="@font/lxgw_regular"
+                            android:paddingStart="40dp"
+                            android:text="Need Thresh "
+                            android:layout_gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            tools:ignore="RtlSymmetry" />
+
+                        <CheckBox
+                            android:id="@+id/cb_step_need_thresh"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/black"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/option_step_Thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:paddingStart="60dp"
+                                android:text="Thresh "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <EditText
+                                android:id="@+id/et_step_thresh"
+                                android:layout_width="0dp"
+                                android:textSize="20sp"
+                                android:textColor="@color/black"
+                                android:gravity="end"
+                                android:textColorHint="@color/gray"
+                                android:background="@drawable/underline"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:inputType="numberDecimal"
+                                android:buttonTint="@color/black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lxgw_regular"
+                                android:text="  "
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/lxgw_regular"
+                    android:text="Computer Vision Method:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:paddingStart="20dp"
+                        android:fontFamily="@font/lxgw_regular"
+                        android:text="Object Detection"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_object_detection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/black"/>
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/btn_start"
+                android:background="@drawable/bg_white"
+                android:text="I'm Ready"
+                android:textColor="@color/black"
+                android:fontFamily="@font/lxgw_bold"
+                android:textAllCaps="false"
+                android:layout_width="100dp"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
 </FrameLayout>
