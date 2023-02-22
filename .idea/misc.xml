@@ -31,6 +31,8 @@
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/button_bg_darkblue.xml" value="0.109" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/button_bg_trans.xml" value="0.146" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/card_background.xml" value="0.1355" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/close_thumb.xml" value="0.214" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/close_track.xml" value="0.214" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/content_background.xml" value="0.1355" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/edit_text_background.xml" value="0.109" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/ic_baseline_add.xml" value="0.115" />
@@ -43,6 +45,8 @@
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/ic_twitter_blue.xml" value="0.1" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/ic_twitter_pink.xml" value="0.1" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/item_selector.xml" value="0.1525" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/open_thumb.xml" value="0.214" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/open_track.xml" value="0.214" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/rectangle.xml" value="0.132" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_account_48dp.xml" value="0.137" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_arrow_down_48dp.xml" value="0.137" />
@@ -69,9 +73,12 @@
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_user_36dp.xml" value="0.137" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_warning_48dp.xml" value="0.137" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_welcome_48dp.xml" value="0.137" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/round_write_24dp.xml" value="0.114" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/roundcornercard.xml" value="0.1835" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/roundcornerwhite.xml" value="0.1835" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/side_nav_bar.xml" value="0.122" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/thumb_selector.xml" value="0.214" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/track_selector.xml" value="0.214" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/drawable/underline.xml" value="0.132" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/font-v26/fonts.xml" value="0.264" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/font/fonts.xml" value="0.4" />

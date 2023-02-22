@@ -1,9 +1,15 @@
 package com.example.senner.Activity;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.util.Log;
+import android.util.Printer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,8 +17,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +30,7 @@ import com.example.senner.Fragment.ObjectDetectionFragment;
 import com.example.senner.Fragment.ProjectFragment;
 import com.example.senner.Fragment.SensorsFragment;
 import com.example.senner.Fragment.UserFragment;
+import com.example.senner.Helper.FileHelper;
 import com.example.senner.R;
 import com.example.senner.UI.ViewPageAdapter;
 import com.github.mikephil.charting.renderer.RadarChartRenderer;
@@ -30,12 +39,17 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.gyf.immersionbar.ImmersionBar;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import eightbitlab.com.blurview.BlurAlgorithm;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import io.github.muddz.styleabletoast.StyleableToast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,45 +62,47 @@ public class MainActivity extends AppCompatActivity {
     private ViewGroup root;
 
     private EditText ProjectName;
-    private CheckBox UseLinearAcc, NeedLinearAccThresh,
-                    UseAcc, NeedAccThresh,
-                    UseGyro, NeedGyroThresh,
-                    UseRot, NeedRotThresh,
-                    UseMRot, NeedMRotThresh,
-                    UseMag, NeedMagThresh,
-                    UseProximity, NeedProximityThresh,
-                    UseLight, NeedLightThresh,
-                    UseTemp, NeedTempThresh,
-                    UsePressure, NeedPressureThresh,
-                    UseHumidity, NeedHumidityThresh,
-                    UseStep, NeedStepThresh,
+    private Switch UseLinearAcc, NeedLinearAccthresh,
+                    UseAcc, NeedAccthresh,
+                    UseGyro, NeedGyrothresh,
+                    UseRot, NeedRotthresh,
+                    UseMRot, NeedMRotthresh,
+                    UseMag, NeedMagthresh,
+                    UseProximity, NeedProximitythresh,
+                    UseLight, NeedLightthresh,
+                    UseTemp, NeedTempthresh,
+                    UsePressure, NeedPressurethresh,
+                    UseHumidity, NeedHumiditythresh,
+                    UseStep, NeedStepthresh,
                     UseObjectDetection;
 
-    private EditText LinearAccThreshX, LinearAccThreshY, LinearAccThreshZ,
-                    AccThreshX, AccThreshY, AccThreshZ,
-                    GyroThreshX, GyroThreshY, GyroThreshZ,
-                    RotThreshX, RotThreshY, RotThreshZ,
-                    MRotThreshX, MRotThreshY, MRotThreshZ,
-                    MagThreshX, MagThreshY, MagThreshZ,
-                    ProximityThresh, LightThresh, TempThresh,
-                    PressureThresh, HumidityThresh, StepThresh;
+    private EditText LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ,
+                    AccthreshX, AccthreshY, AccthreshZ,
+                    GyrothreshX, GyrothreshY, GyrothreshZ,
+                    RotthreshX, RotthreshY, RotthreshZ,
+                    MRotthreshX, MRotthreshY, MRotthreshZ,
+                    MagthreshX, MagthreshY, MagthreshZ,
+                    Proximitythresh, Lightthresh, Tempthresh,
+                    Pressurethresh, Humiditythresh, Stepthresh;
 
     private Button StartButton;
 
-    private LinearLayout LinearAccNeedThreshMenu, LinearAccSetThreshMenu,
-                        AccNeedThreshMenu, AccSetThreshMenu,
-                        GyroNeedThreshMenu, GyroSetThreshMenu,
-                        RotNeedThreshMenu, RotSetThreshMenu,
-                        MRotNeedThreshMenu, MRotSetThreshMenu,
-                        MagNeedThreshMenu, MagSetThreshMenu,
-                        ProximityNeedThreshMenu, ProximitySetThreshMenu,
-                        LightNeedThreshMenu, LightSetThreshMenu,
-                        PressureNeedThreshMenu, PressureSetThreshMenu,
-                        TempNeedThreshMenu, TempSetThreshMenu,
-                        StepNeedThreshMenu, StepSetThreshMenu,
-                        HumidityNeedThreshMenu, HumiditySetThreshMenu;
+    private LinearLayout LinearAccNeedthreshMenu, LinearAccSetthreshMenu,
+                        AccNeedthreshMenu, AccSetthreshMenu,
+                        GyroNeedthreshMenu, GyroSetthreshMenu,
+                        RotNeedthreshMenu, RotSetthreshMenu,
+                        MRotNeedthreshMenu, MRotSetthreshMenu,
+                        MagNeedthreshMenu, MagSetthreshMenu,
+                        ProximityNeedthreshMenu, ProximitySetthreshMenu,
+                        LightNeedthreshMenu, LightSetthreshMenu,
+                        PressureNeedthreshMenu, PressureSetthreshMenu,
+                        TempNeedthreshMenu, TempSetthreshMenu,
+                        StepNeedthreshMenu, StepSetthreshMenu,
+                        HumidityNeedthreshMenu, HumiditySetthreshMenu;
 
+    private FileHelper fileHelper;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +112,116 @@ public class MainActivity extends AppCompatActivity {
         ImmersionBar.with(this).init();
         Init();
         SetCheckBox();
+        SetStartButton();
         SetViewPage();
         reviseViewpagerConfigurePara();
     }
+    //项目综述
+    private String ProjectInfo;
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void SetStartButton() {
+        //点击开始按钮应该依次执行以下事件
+        //确保项目名称输入框非空，并创建相应名称文件夹
+        //先判断使用阈值与输入阈值的冲突关系
+        StartButton.setOnClickListener(v -> {
+
+            if(ProjectName.getText().toString().isEmpty()){
+
+                //触发震动事件
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                VibrationEffect effect = VibrationEffect.createOneShot(200, 200);
+                // 检查设备是否支持 VibratorEffect 对象
+                if (vibrator.hasAmplitudeControl()) {
+                    // 设备支持 VibratorEffect 对象
+                    vibrator.vibrate(effect);
+                } else {
+                    // 设备不支持 VibratorEffect 对象
+                    vibrator.vibrate(200);
+                }
+
+                StyleableToast.makeText(MainActivity.this, "Invalid Project Name", R.style.WarningToast).show();
+                ProjectName.setBackground(getDrawable(R.drawable.bg_red));
+            }else{
+
+                //时间
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT+8")); // 将时区设置为东八区
+                Date currentDate = new Date();
+                String currentTime = sdf.format(currentDate.getTime());
+                ProjectInfo = "Project Name: " + ProjectName.getText().toString() + "\n" + "Create Time: " + currentTime + "\n";
+
+                //判断Switch所处状态
+                CheckSensorOptionState(UseLinearAcc, NeedLinearAccthresh, LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ, "Linear Accelerometer", "m/s^2");
+                CheckSensorOptionState(UseAcc, NeedAccthresh, AccthreshX, AccthreshY, AccthreshZ, "Accelerometer", "m/s^2");
+                CheckSensorOptionState(UseRot, NeedRotthresh, RotthreshX, RotthreshY, RotthreshZ, "Rotation Vector Sensor", " ");
+                CheckSensorOptionState(UseMRot, NeedMRotthresh, MRotthreshX, MRotthreshY, MRotthreshZ, "Geomagnetic Rotation Vector Sensor", " ");
+                CheckSensorOptionState(UseMag, NeedMagthresh, MagthreshX, MagthreshY, MagthreshZ, "Magnetic Field Sensor", "μT");
+                CheckSensorOptionState(UseGyro, NeedGyrothresh, GyrothreshX, GyrothreshY, GyrothreshZ, "Gyroscope", "°");
+                CheckSensorOptionState(UseProximity, NeedProximitythresh, Proximitythresh, "Proximity Sensor", "cm");
+                CheckSensorOptionState(UseLight, NeedLightthresh, Lightthresh, "Light Sensor", "lux");
+                CheckSensorOptionState(UseTemp, NeedTempthresh, Tempthresh, "Ambient Temperature Sensor", "℃");
+                CheckSensorOptionState(UseHumidity, NeedHumiditythresh, Humiditythresh, "Relative Humidity Sensor", "%");
+                CheckSensorOptionState(UsePressure, NeedPressurethresh, Pressurethresh, "Pressure Sensor", "kPa");
+                CheckSensorOptionState(UseStep, NeedStepthresh, Stepthresh, "Step Counter", "steps");
+
+                Log.d("ProjectInfo", ProjectInfo);
+
+            }
+
+        });
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void CheckSensorOptionState(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useSensor, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch needthresh, EditText threshX, EditText threshY, EditText threshZ, String SensorName, String Dimension) {
+        if(useSensor.isChecked() && needthresh.isChecked() && !threshX.getText().toString().isEmpty() && !threshY.getText().toString().isEmpty() && !threshZ.getText().toString().isEmpty()){
+
+            ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + threshX.getText().toString() +" " + Dimension +", " + threshY.getText().toString() +" " + Dimension  + ", " + threshZ.getText().toString() + " " + Dimension + "\n";
+        }
+        else if(!useSensor.isChecked()){
+
+            ProjectInfo += "Use "+ SensorName + " : "  + "false" + "\n";
+        }
+        else if(useSensor.isChecked() && !needthresh.isChecked()){
+
+            ProjectInfo += "Use "+ SensorName + " : "  + "true" + "\n" + "Need Thresh: " + "false" + "\n";
+        }
+        else if(useSensor.isChecked() && needthresh.isChecked() && (threshX.getText().toString().isEmpty() || threshY.getText().toString().isEmpty() || threshZ.getText().toString().isEmpty())){
+
+            if(threshX.getText().toString().isEmpty()){
+                threshX.setBackground(getDrawable(R.drawable.bg_red));
+            }
+            if(threshY.getText().toString().isEmpty()){
+                threshY.setBackground(getDrawable(R.drawable.bg_red));
+            }
+            if(threshZ.getText().toString().isEmpty()){
+                threshZ.setBackground(getDrawable(R.drawable.bg_red));
+            }
+        }
+    }
+    //重载单阈值方法
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void CheckSensorOptionState(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useSensor, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch needthresh, EditText thresh, String SensorName, String Dimension) {
+        if(useSensor.isChecked() && needthresh.isChecked() && !thresh.getText().toString().isEmpty()){
+
+            ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + thresh.getText().toString() +" " + Dimension + "\n";
+        }
+        else if(!useSensor.isChecked()){
+
+            ProjectInfo += "Use "+ SensorName + " : "  + "false" + "\n";
+        }
+        else if(useSensor.isChecked() && !needthresh.isChecked()){
+
+            ProjectInfo += "Use "+ SensorName + " : "  + "true" + "\n" + "Need Thresh: " + "false" + "\n";
+        }
+        else if(useSensor.isChecked() && needthresh.isChecked() && thresh.getText().toString().isEmpty()){
 
 
+            thresh.setBackground(getDrawable(R.drawable.bg_red));
+
+
+        }
+    }
 
     /**
      * 初始化UI控件
@@ -112,87 +233,87 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
 
-        LinearAccNeedThreshMenu = findViewById(R.id.option_linearacc_need_Thresh);
-        LinearAccSetThreshMenu = findViewById(R.id.option_linearacc_Thresh);
-        AccNeedThreshMenu = findViewById(R.id.option_acc_need_Thresh);
-        AccSetThreshMenu = findViewById(R.id.option_acc_Thresh);
-        GyroNeedThreshMenu = findViewById(R.id.option_gyro_need_Thresh);
-        GyroSetThreshMenu = findViewById(R.id.option_gyro_Thresh);
-        RotNeedThreshMenu = findViewById(R.id.option_rot_need_Thresh);
-        RotSetThreshMenu = findViewById(R.id.option_rot_Thresh);
-        MRotNeedThreshMenu = findViewById(R.id.option_mrot_need_Thresh);
-        MRotSetThreshMenu = findViewById(R.id.option_mrot_Thresh);
-        MagNeedThreshMenu = findViewById(R.id.option_mag_need_Thresh);
-        MagSetThreshMenu = findViewById(R.id.option_mag_Thresh);
-        ProximityNeedThreshMenu = findViewById(R.id.option_proximity_need_Thresh);
-        ProximitySetThreshMenu = findViewById(R.id.option_proximity_Thresh);
-        LightNeedThreshMenu = findViewById(R.id.option_light_need_Thresh);
-        LightSetThreshMenu = findViewById(R.id.option_light_Thresh);
-        PressureNeedThreshMenu = findViewById(R.id.option_pressure_need_Thresh);
-        PressureSetThreshMenu = findViewById(R.id.option_pressure_Thresh);
-        TempNeedThreshMenu = findViewById(R.id.option_temp_need_Thresh);
-        TempSetThreshMenu = findViewById(R.id.option_temp_Thresh);
-        StepNeedThreshMenu = findViewById(R.id.option_step_need_Thresh);
-        StepSetThreshMenu = findViewById(R.id.option_step_Thresh);
-        HumidityNeedThreshMenu = findViewById(R.id.option_humidity_need_Thresh);
-        HumiditySetThreshMenu = findViewById(R.id.option_humidity_Thresh);
+        LinearAccNeedthreshMenu = findViewById(R.id.option_linearacc_need_thresh);
+        LinearAccSetthreshMenu = findViewById(R.id.option_linearacc_thresh);
+        AccNeedthreshMenu = findViewById(R.id.option_acc_need_thresh);
+        AccSetthreshMenu = findViewById(R.id.option_acc_thresh);
+        GyroNeedthreshMenu = findViewById(R.id.option_gyro_need_thresh);
+        GyroSetthreshMenu = findViewById(R.id.option_gyro_thresh);
+        RotNeedthreshMenu = findViewById(R.id.option_rot_need_thresh);
+        RotSetthreshMenu = findViewById(R.id.option_rot_thresh);
+        MRotNeedthreshMenu = findViewById(R.id.option_mrot_need_thresh);
+        MRotSetthreshMenu = findViewById(R.id.option_mrot_thresh);
+        MagNeedthreshMenu = findViewById(R.id.option_mag_need_thresh);
+        MagSetthreshMenu = findViewById(R.id.option_mag_thresh);
+        ProximityNeedthreshMenu = findViewById(R.id.option_proximity_need_thresh);
+        ProximitySetthreshMenu = findViewById(R.id.option_proximity_thresh);
+        LightNeedthreshMenu = findViewById(R.id.option_light_need_thresh);
+        LightSetthreshMenu = findViewById(R.id.option_light_thresh);
+        PressureNeedthreshMenu = findViewById(R.id.option_pressure_need_thresh);
+        PressureSetthreshMenu = findViewById(R.id.option_pressure_thresh);
+        TempNeedthreshMenu = findViewById(R.id.option_temp_need_thresh);
+        TempSetthreshMenu = findViewById(R.id.option_temp_thresh);
+        StepNeedthreshMenu = findViewById(R.id.option_step_need_thresh);
+        StepSetthreshMenu = findViewById(R.id.option_step_thresh);
+        HumidityNeedthreshMenu = findViewById(R.id.option_humidity_need_thresh);
+        HumiditySetthreshMenu = findViewById(R.id.option_humidity_thresh);
 
 
         //绑定CheckBox
         ProjectName = findViewById(R.id.et_projectName);
 
         UseLinearAcc = findViewById(R.id.cb_linearacc);
-        NeedLinearAccThresh = findViewById(R.id.cb_linearacc_need_thresh);
+        NeedLinearAccthresh = findViewById(R.id.cb_linearacc_need_thresh);
         UseAcc = findViewById(R.id.cb_acc);
-        NeedAccThresh = findViewById(R.id.cb_acc_need_thresh);
+        NeedAccthresh = findViewById(R.id.cb_acc_need_thresh);
         UseGyro = findViewById(R.id.cb_gyro);
-        NeedGyroThresh = findViewById(R.id.cb_gyro_need_thresh);
+        NeedGyrothresh = findViewById(R.id.cb_gyro_need_thresh);
         UseRot = findViewById(R.id.cb_rot);
-        NeedRotThresh = findViewById(R.id.cb_rot_need_thresh);
+        NeedRotthresh = findViewById(R.id.cb_rot_need_thresh);
         UseMRot = findViewById(R.id.cb_mrot);
-        NeedMRotThresh = findViewById(R.id.cb_mrot_need_thresh);
+        NeedMRotthresh = findViewById(R.id.cb_mrot_need_thresh);
         UseMag = findViewById(R.id.cb_mag);
-        NeedMagThresh = findViewById(R.id.cb_mag_need_thresh);
+        NeedMagthresh = findViewById(R.id.cb_mag_need_thresh);
         UseProximity = findViewById(R.id.cb_proximity);
-        NeedProximityThresh = findViewById(R.id.cb_proximity_need_thresh);
+        NeedProximitythresh = findViewById(R.id.cb_proximity_need_thresh);
         UseLight = findViewById(R.id.cb_light);
-        NeedLightThresh = findViewById(R.id.cb_light_need_thresh);
+        NeedLightthresh = findViewById(R.id.cb_light_need_thresh);
         UseTemp = findViewById(R.id.cb_temp);
-        NeedTempThresh = findViewById(R.id.cb_temp_need_thresh);
+        NeedTempthresh = findViewById(R.id.cb_temp_need_thresh);
         UsePressure = findViewById(R.id.cb_pressure);
-        NeedPressureThresh = findViewById(R.id.cb_pressure_need_thresh);
+        NeedPressurethresh = findViewById(R.id.cb_pressure_need_thresh);
         UseHumidity = findViewById(R.id.cb_humidity);
-        NeedHumidityThresh = findViewById(R.id.cb_humidity_need_thresh);
+        NeedHumiditythresh = findViewById(R.id.cb_humidity_need_thresh);
         UseStep = findViewById(R.id.cb_step);
-        NeedStepThresh = findViewById(R.id.cb_step_need_thresh);
+        NeedStepthresh = findViewById(R.id.cb_step_need_thresh);
 
         UseObjectDetection = findViewById(R.id.cb_object_detection);
 
         //绑定EditBox
-        LinearAccThreshX = findViewById(R.id.et_linearacc_threshX);
-        LinearAccThreshY = findViewById(R.id.et_linearacc_threshY);
-        LinearAccThreshZ = findViewById(R.id.et_linearacc_threshZ);
-        AccThreshX = findViewById(R.id.et_acc_threshX);
-        AccThreshY = findViewById(R.id.et_acc_threshY);
-        AccThreshZ = findViewById(R.id.et_acc_threshZ);
-        GyroThreshX = findViewById(R.id.et_gyro_threshX);
-        GyroThreshY = findViewById(R.id.et_gyro_threshY);
-        GyroThreshZ = findViewById(R.id.et_gyro_threshZ);
-        RotThreshX = findViewById(R.id.et_rot_threshX);
-        RotThreshY = findViewById(R.id.et_rot_threshY);
-        RotThreshZ = findViewById(R.id.et_rot_threshZ);
-        MRotThreshX = findViewById(R.id.et_mrot_threshX);
-        MRotThreshY = findViewById(R.id.et_mrot_threshY);
-        MRotThreshZ = findViewById(R.id.et_mrot_threshZ);
-        MagThreshX = findViewById(R.id.et_mag_threshX);
-        MagThreshY = findViewById(R.id.et_mag_threshY);
-        MagThreshZ = findViewById(R.id.et_mag_threshZ);
-        ProximityThresh = findViewById(R.id.et_proximity_thresh);
-        LightThresh = findViewById(R.id.et_light_thresh);
-        TempThresh = findViewById(R.id.et_temp_thresh);
-        PressureThresh = findViewById(R.id.et_pressure_thresh);
-        HumidityThresh = findViewById(R.id.et_humidity_thresh);
-        StepThresh = findViewById(R.id.et_step_thresh);
+        LinearAccthreshX = findViewById(R.id.et_linearacc_threshX);
+        LinearAccthreshY = findViewById(R.id.et_linearacc_threshY);
+        LinearAccthreshZ = findViewById(R.id.et_linearacc_threshZ);
+        AccthreshX = findViewById(R.id.et_acc_threshX);
+        AccthreshY = findViewById(R.id.et_acc_threshY);
+        AccthreshZ = findViewById(R.id.et_acc_threshZ);
+        GyrothreshX = findViewById(R.id.et_gyro_threshX);
+        GyrothreshY = findViewById(R.id.et_gyro_threshY);
+        GyrothreshZ = findViewById(R.id.et_gyro_threshZ);
+        RotthreshX = findViewById(R.id.et_rot_threshX);
+        RotthreshY = findViewById(R.id.et_rot_threshY);
+        RotthreshZ = findViewById(R.id.et_rot_threshZ);
+        MRotthreshX = findViewById(R.id.et_mrot_threshX);
+        MRotthreshY = findViewById(R.id.et_mrot_threshY);
+        MRotthreshZ = findViewById(R.id.et_mrot_threshZ);
+        MagthreshX = findViewById(R.id.et_mag_threshX);
+        MagthreshY = findViewById(R.id.et_mag_threshY);
+        MagthreshZ = findViewById(R.id.et_mag_threshZ);
+        Proximitythresh = findViewById(R.id.et_proximity_thresh);
+        Lightthresh = findViewById(R.id.et_light_thresh);
+        Tempthresh = findViewById(R.id.et_temp_thresh);
+        Pressurethresh = findViewById(R.id.et_pressure_thresh);
+        Humiditythresh = findViewById(R.id.et_humidity_thresh);
+        Stepthresh = findViewById(R.id.et_step_thresh);
 
         //绑定按钮
         StartButton = findViewById(R.id.btn_start);
@@ -202,43 +323,71 @@ public class MainActivity extends AppCompatActivity {
         root = findViewById(R.id.root);
         setupBlurView();
 
+        //文件读写
+        fileHelper = new FileHelper();
     }
 
     private boolean IsUseObjectDetection = false;
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void SetCheckBox() {
 
-        UseLinearAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseLinearAcc, LinearAccNeedThreshMenu, NeedLinearAccThresh, LinearAccSetThreshMenu));
-        UseAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseAcc, AccNeedThreshMenu, NeedAccThresh, AccSetThreshMenu));
-        UseGyro.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseGyro, GyroNeedThreshMenu, NeedGyroThresh, GyroSetThreshMenu));
-        UseRot.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseRot, RotNeedThreshMenu, NeedRotThresh, RotSetThreshMenu));
-        UseMRot.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseMRot, MRotNeedThreshMenu, NeedMRotThresh, MRotSetThreshMenu));
-        UseMag.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseMag, MagNeedThreshMenu, NeedMagThresh, MagSetThreshMenu));
-        UseProximity.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseProximity, ProximityNeedThreshMenu, NeedProximityThresh,ProximitySetThreshMenu));
-        UseLight.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseLight, LightNeedThreshMenu, NeedLightThresh, LightSetThreshMenu));
-        UseTemp.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseTemp, TempNeedThreshMenu, NeedTempThresh, TempSetThreshMenu));
-        UsePressure.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UsePressure, PressureNeedThreshMenu, NeedPressureThresh, PressureSetThreshMenu));
-        UseHumidity.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseHumidity, HumidityNeedThreshMenu, NeedHumidityThresh, HumiditySetThreshMenu));
-        UseStep.setOnCheckedChangeListener((v, isChecked) -> SetNeedThreshMenuVisibility(UseStep, StepNeedThreshMenu, NeedStepThresh, StepSetThreshMenu));
+        UseLinearAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseLinearAcc, LinearAccNeedthreshMenu, NeedLinearAccthresh, LinearAccSetthreshMenu));
+        UseAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseAcc, AccNeedthreshMenu, NeedAccthresh, AccSetthreshMenu));
+        UseGyro.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseGyro, GyroNeedthreshMenu, NeedGyrothresh, GyroSetthreshMenu));
+        UseRot.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseRot, RotNeedthreshMenu, NeedRotthresh, RotSetthreshMenu));
+        UseMRot.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseMRot, MRotNeedthreshMenu, NeedMRotthresh, MRotSetthreshMenu));
+        UseMag.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseMag, MagNeedthreshMenu, NeedMagthresh, MagSetthreshMenu));
+        UseProximity.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseProximity, ProximityNeedthreshMenu, NeedProximitythresh,ProximitySetthreshMenu));
+        UseLight.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseLight, LightNeedthreshMenu, NeedLightthresh, LightSetthreshMenu));
+        UseTemp.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseTemp, TempNeedthreshMenu, NeedTempthresh, TempSetthreshMenu));
+        UsePressure.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UsePressure, PressureNeedthreshMenu, NeedPressurethresh, PressureSetthreshMenu));
+        UseHumidity.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseHumidity, HumidityNeedthreshMenu, NeedHumiditythresh, HumiditySetthreshMenu));
+        UseStep.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseStep, StepNeedthreshMenu, NeedStepthresh, StepSetthreshMenu));
         UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> {IsUseObjectDetection = UseObjectDetection.isChecked();});
     }
 
-    private void SetNeedThreshMenuVisibility(CheckBox UseSensor, LinearLayout NeedThreshMenu, CheckBox NeedThresh, LinearLayout SetThreshMenu) {
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void SetNeedthreshMenuVisibility(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch UseSensor, LinearLayout NeedthreshMenu, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch Needthresh, LinearLayout SetthreshMenu) {
+
+        //触发震动事件
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        VibrationEffect effect = VibrationEffect.createOneShot(200, VibrationEffect.EFFECT_HEAVY_CLICK);
+        // 检查设备是否支持 VibratorEffect 对象
+        if (vibrator.hasAmplitudeControl()) {
+            // 设备支持 VibratorEffect 对象
+            vibrator.vibrate(effect);
+        } else {
+            // 设备不支持 VibratorEffect 对象
+            vibrator.vibrate(200);
+        }
+
         if(UseSensor.isChecked()){
-            NeedThreshMenu.setVisibility(View.VISIBLE);
-            NeedThresh.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if(NeedThresh.isChecked()){
-                    SetThreshMenu.setVisibility(View.VISIBLE);
+            NeedthreshMenu.setVisibility(View.VISIBLE);
+            Needthresh.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                // 检查设备是否支持 VibratorEffect 对象
+                if (vibrator.hasAmplitudeControl()) {
+                    // 设备支持 VibratorEffect 对象
+                    vibrator.vibrate(effect);
+                } else {
+                    // 设备不支持 VibratorEffect 对象
+                    vibrator.vibrate(200);
+                }
+
+                if(Needthresh.isChecked()){
+                    SetthreshMenu.setVisibility(View.VISIBLE);
                 }else{
-                    SetThreshMenu.setVisibility(View.GONE);
+                    SetthreshMenu.setVisibility(View.GONE);
                 }
             });
         }else{
-            NeedThresh.setChecked(false);
-            NeedThreshMenu.setVisibility(View.GONE);
-            SetThreshMenu.setVisibility(View.GONE);
+            Needthresh.setChecked(false);
+            NeedthreshMenu.setVisibility(View.GONE);
+            SetthreshMenu.setVisibility(View.GONE);
         }
 
     }
+
 
     /**
      * 设置高斯模糊
