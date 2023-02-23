@@ -150,11 +150,7 @@ public class RegisterFragment extends Fragment {
                 StyleableToast.makeText(requireActivity(), "There maybe something wrong. ", R.style.WarningToast).show();
             }
 
-        }, error -> {
-            hideDialog();
-        }) {
-
-
+        }, error -> hideDialog()) {
 
             @Override
             protected Map<String, String> getParams() {

@@ -12,7 +12,6 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/round_check_circle_48dp</item>
         <item name="stLength">SHORT</item>
-        <item name="stGravity">top</item>
         <item name="stRadius">5dp</item>
     </style>
 
@@ -28,7 +27,6 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/round_warning_48dp</item>
         <item name="stLength">SHORT</item>
-        <item name="stGravity">top</item>
         <item name="stRadius">5dp</item>
     </style>
 
@@ -44,7 +42,6 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/round_welcome_48dp</item>
         <item name="stLength">LONG</item>
-        <item name="stGravity">top</item>
         <item name="stRadius">5dp</item>
     </style>
 
@@ -59,7 +56,6 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/round_goodbye_48dp</item>
         <item name="stLength">LONG</item>
-        <item name="stGravity">top</item>
         <item name="stRadius">5dp</item>
     </style>
 

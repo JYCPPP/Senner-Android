@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,10 +38,6 @@ import com.example.senner.UI.ChartView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.listener.OnDrawListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +46,13 @@ public final class ObjectDetectionFragment extends Fragment  {
 
     private PreviewView cameraPreviewMatch;
     private ImageView boxLabelCanvas;
-    private Spinner modelSpinner;
     private TextView inferenceTimeTextView;
     private TextView frameSizeTextView;
     private Yolov5TFLiteDetector yolov5TFLiteDetector;
     private ImageAnalyse imageAnalyse;
     private int rotation;
 
-    private CameraProcess cameraProcess = new CameraProcess();
+    private final CameraProcess cameraProcess = new CameraProcess();
 
     //Menu
     private float posY, curPosY;
@@ -66,14 +60,13 @@ public final class ObjectDetectionFragment extends Fragment  {
     private Animation animation;
     private FrameLayout menu;
     private ImageView arrow;
-    private View rootView;
 
     //位移相关
     private FrameLayout camera;
     private Button recordButton;
     private boolean IsClickRecording = false;
     private LineChart disChart;
-    private ChartView chartView = new ChartView();
+    private final ChartView chartView = new ChartView();
 
 
 
@@ -81,7 +74,7 @@ public final class ObjectDetectionFragment extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_object_detection, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_object_detection, container, false);
 
         Init(rootView);
         return rootView;
@@ -101,7 +94,7 @@ public final class ObjectDetectionFragment extends Fragment  {
         boxLabelCanvas = view.findViewById(R.id.box_label_canvas);
 
         // 下拉按钮
-        modelSpinner = view.findViewById(R.id.model);
+        Spinner modelSpinner = view.findViewById(R.id.model);
 
         // 实时更新的一些view
         inferenceTimeTextView = view.findViewById(R.id.inference_time);
@@ -154,7 +147,6 @@ public final class ObjectDetectionFragment extends Fragment  {
     /**
      * 加载模型
      *
-     * @param modelName
      */
     private void initModel(String modelName) {
         // 加载模型
@@ -232,67 +224,65 @@ public final class ObjectDetectionFragment extends Fragment  {
     private void setMenuView() {
         //主线程执行避免阻塞
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            camera.setOnTouchListener((v, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        posY = event.getRawY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        curPosY = event.getRawY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if ((curPosY - posY > 0) && (Math.abs(curPosY - posY) > 25)) {
-                            if (!isSheetOpen) {
-                                animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.view_down);
-                                //设置背景隐藏
-                                camera.setClickable(false);
-                                camera.setFocusable(false);
-                                camera.setVisibility(View.INVISIBLE);
-                                //设置菜单可视
-                                menu.setVisibility(View.VISIBLE);
-                                menu.startAnimation(animation);
-                                menu.setFocusable(true);
-                                menu.setClickable(true);
-                                isSheetOpen = true;
-                                arrow.setImageResource(R.drawable.round_arrow_up_48dp);
+        handler.post(() -> camera.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    posY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    curPosY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if ((curPosY - posY > 0) && (Math.abs(curPosY - posY) > 25)) {
+                        if (!isSheetOpen) {
+                            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_down);
+                            //设置背景隐藏
+                            camera.setClickable(false);
+                            camera.setFocusable(false);
+                            camera.setVisibility(View.INVISIBLE);
+                            //设置菜单可视
+                            menu.setVisibility(View.VISIBLE);
+                            menu.startAnimation(animation);
+                            menu.setFocusable(true);
+                            menu.setClickable(true);
+                            isSheetOpen = true;
+                            arrow.setImageResource(R.drawable.round_arrow_up_48dp);
 
-                                menu.setOnTouchListener((sheet, slide) -> {
-                                    switch (slide.getAction()) {
-                                        case MotionEvent.ACTION_DOWN:
-                                            posY = slide.getRawY();
-                                            break;
-                                        case MotionEvent.ACTION_MOVE:
-                                            curPosY = slide.getRawY();
-                                            break;
-                                        case MotionEvent.ACTION_UP:
-                                            if ((curPosY - posY < 0) && (Math.abs(curPosY - posY) > 25)) {
-                                                if (isSheetOpen) {
-                                                    animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.view_up);
-                                                    //设置背景显示
-                                                    camera.setClickable(true);
-                                                    camera.setFocusable(true);
-                                                    camera.setVisibility(View.VISIBLE);
-                                                    //设置菜单隐藏
-                                                    menu.startAnimation(animation);
-                                                    menu.setVisibility(View.INVISIBLE);
-                                                    menu.setClickable(false);
-                                                    menu.setFocusable(false);
-                                                    arrow.setImageResource(R.drawable.round_arrow_down_48dp);
-                                                    isSheetOpen = false;
-                                                }
+                            menu.setOnTouchListener((sheet, slide) -> {
+                                switch (slide.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        posY = slide.getRawY();
+                                        break;
+                                    case MotionEvent.ACTION_MOVE:
+                                        curPosY = slide.getRawY();
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        if ((curPosY - posY < 0) && (Math.abs(curPosY - posY) > 25)) {
+                                            if (isSheetOpen) {
+                                                animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_up);
+                                                //设置背景显示
+                                                camera.setClickable(true);
+                                                camera.setFocusable(true);
+                                                camera.setVisibility(View.VISIBLE);
+                                                //设置菜单隐藏
+                                                menu.startAnimation(animation);
+                                                menu.setVisibility(View.INVISIBLE);
+                                                menu.setClickable(false);
+                                                menu.setFocusable(false);
+                                                arrow.setImageResource(R.drawable.round_arrow_down_48dp);
+                                                isSheetOpen = false;
                                             }
-                                            break;
-                                    }
-                                    return true;
-                                });
-                            }
+                                        }
+                                        break;
+                                }
+                                return true;
+                            });
                         }
-                        break;
-                }
-                return true;
-            });
-        });
+                    }
+                    break;
+            }
+            return true;
+        }));
     }
 
 

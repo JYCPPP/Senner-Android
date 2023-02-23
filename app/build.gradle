@@ -33,8 +33,6 @@ android {
 
 dependencies {
 
-    // 介绍页面，AndroidX Capable version
-    implementation 'com.github.AppIntro:AppIntro:6.1.0'
 
     //自定义Toast
     implementation 'io.github.muddz:styleabletoast:2.4.0'
@@ -55,10 +53,7 @@ dependencies {
 
     //图表
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
-    //卡片式列表
-    implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
-
+    
 
     //高斯模糊效果
     implementation 'com.github.Dimezis:BlurView:version-2.0.3'

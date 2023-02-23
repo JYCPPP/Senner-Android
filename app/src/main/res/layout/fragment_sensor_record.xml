@@ -11,6 +11,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -18,6 +20,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -25,7 +28,7 @@
                     android:id="@+id/cardimage_linearacc"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/navy" />
+                    android:background="@color/navy" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,7 +47,7 @@
                         android:paddingStart="5dp"
                         android:text="Linear Accelerometer"
                         android:textColor="@color/navy"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -56,7 +59,7 @@
                         android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/linearaccelerationData"
@@ -69,12 +72,12 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/linearaccelerationChart"
                         android:layout_width="match_parent"
-                        android:layout_height="350dp"
+                        android:layout_height="400dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
@@ -86,6 +89,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -93,7 +97,7 @@
                     android:id="@+id/cardimage_acc"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkred" />
+                    android:background="@color/darkred" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -111,7 +115,7 @@
                         android:paddingStart="5dp"
                         android:text="Accelerometer"
                         android:textColor="@color/darkred"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -123,7 +127,7 @@
                         android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                     <TextView
                         android:id="@+id/accelerationData"
                         android:layout_width="match_parent"
@@ -135,7 +139,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/accelerationChart"
@@ -151,6 +155,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -158,7 +163,7 @@
                     android:id="@+id/cardimage_gyro"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/coffee" />
+                    android:background="@color/coffee" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -176,7 +181,7 @@
                         android:paddingStart="5dp"
                         android:text="Gyroscope"
                         android:textColor="@color/coffee"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -188,7 +193,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                     <TextView
                         android:id="@+id/gyroscopeData"
                         android:layout_width="match_parent"
@@ -200,7 +205,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/gyroscopeChart"
@@ -216,6 +221,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -223,7 +229,7 @@
                     android:id="@+id/cardimage_rotation"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkorange" />
+                    android:background="@color/darkorange" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -241,7 +247,7 @@
                         android:paddingStart="5dp"
                         android:text="Rotation Vector Sensor"
                         android:textColor="@color/darkorange"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -253,7 +259,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/rotationData"
@@ -266,7 +272,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/rotationChart"
@@ -283,6 +289,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -290,7 +297,7 @@
                     android:id="@+id/cardimage_magnetic_rotation"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkviolet" />
+                    android:background="@color/darkviolet" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -308,7 +315,7 @@
                         android:paddingStart="5dp"
                         android:text="Geomagnetic Rotation Vector Sensor"
                         android:textColor="@color/darkviolet"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -320,7 +327,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                     <TextView
                         android:id="@+id/magnetic_rotationData"
                         android:layout_width="match_parent"
@@ -332,7 +339,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/magnetic_rotationChart"
@@ -349,6 +356,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -356,7 +364,7 @@
                     android:id="@+id/cardimage_magnetic"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkolivegreen" />
+                    android:background="@color/darkolivegreen" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -374,7 +382,7 @@
                         android:paddingStart="5dp"
                         android:text="Magnetic Field Sensor"
                         android:textColor="@color/darkolivegreen"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -386,7 +394,7 @@
                         android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                     <TextView
                         android:id="@+id/magneticData"
                         android:layout_width="match_parent"
@@ -398,7 +406,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/magneticChart"
@@ -414,6 +422,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -421,7 +430,7 @@
                     android:id="@+id/cardimage_proximity"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkgoldenrod" />
+                    android:background="@color/darkgoldenrod" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -439,7 +448,7 @@
                         android:paddingStart="5dp"
                         android:text="Proximity Sensor"
                         android:textColor="@color/darkgoldenrod"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -451,7 +460,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/proximityData"
@@ -464,7 +473,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/proximityChart"
@@ -480,6 +489,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -487,7 +497,7 @@
                     android:id="@+id/cardimage_light"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkslateblue" />
+                    android:background="@color/darkslateblue" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -505,7 +515,7 @@
                         android:paddingStart="5dp"
                         android:text="Light Sensor"
                         android:textColor="@color/darkslateblue"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -517,7 +527,7 @@
                         android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/lightSensorData"
@@ -530,7 +540,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/lightChart"
@@ -546,6 +556,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -553,7 +564,7 @@
                     android:id="@+id/cardimage_temp"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/colorAccent" />
+                    android:background="@color/colorAccent" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -571,7 +582,7 @@
                         android:paddingStart="5dp"
                         android:text="Ambient Temperature Sensor"
                         android:textColor="@color/colorAccent"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -583,7 +594,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tempSensorData"
@@ -596,7 +607,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/tempChart"
@@ -612,6 +623,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -619,7 +631,7 @@
                     android:id="@+id/cardimage_pressure"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkgray" />
+                    android:background="@color/darkgray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -638,7 +650,7 @@
                         android:paddingStart="5dp"
                         android:text="Pressure Sensor"
                         android:textColor="@color/darkgray"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -650,7 +662,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/pressureSensorData"
@@ -663,7 +675,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/pressureChart"
@@ -679,6 +691,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -686,7 +699,7 @@
                     android:id="@+id/cardimage_step"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkcyan" />
+                    android:background="@color/darkcyan" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -705,7 +718,7 @@
                         android:paddingStart="5dp"
                         android:text="Step Counter"
                         android:textColor="@color/darkcyan"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -717,7 +730,7 @@
                         android:layout_gravity="left"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                     <TextView
                         android:id="@+id/stepData"
                         android:layout_width="match_parent"
@@ -729,7 +742,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/stepChart"
@@ -746,6 +759,7 @@
             <LinearLayout
                 android:background="@drawable/card_background"
                 android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -753,7 +767,7 @@
                     android:id="@+id/cardimage_humidity"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
-                    android:src="@color/darkturquoise" />
+                    android:background="@color/darkturquoise" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -771,7 +785,7 @@
                         android:paddingStart="5dp"
                         android:text="Humidity Sensor"
                         android:textColor="@color/darkturquoise"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
@@ -783,7 +797,7 @@
                         android:layout_gravity="start"
                         android:text="Description"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/humiditySensorData"
@@ -796,7 +810,7 @@
                         android:gravity="start"
                         android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/humidityChart"

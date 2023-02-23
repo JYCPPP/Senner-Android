@@ -1,47 +1,52 @@
 package com.example.senner.Activity;
 
-import android.animation.ObjectAnimator;
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
-import android.util.Printer;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.senner.Fragment.ObjectDetectionFragment;
 import com.example.senner.Fragment.ProjectFragment;
-import com.example.senner.Fragment.SensorsFragment;
+import com.example.senner.Fragment.SensorRecordFragment;
 import com.example.senner.Fragment.UserFragment;
-import com.example.senner.Helper.FileHelper;
+import com.example.senner.Helper.SharedPreferenceHelper;
 import com.example.senner.R;
 import com.example.senner.UI.ViewPageAdapter;
-import com.github.mikephil.charting.renderer.RadarChartRenderer;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.gyf.immersionbar.ImmersionBar;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -55,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private ArrayList<Fragment> fragments;
     private ArrayList<Drawable> icons;
-    private ViewPageAdapter viewPageAdapter;
     private BlurView blurView_bottom;
     private ViewGroup root;
+    private FrameLayout menu;
 
     private EditText ProjectName;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch UseLinearAcc, NeedLinearAccthresh,
                     UseAcc, NeedAccthresh,
                     UseGyro, NeedGyrothresh,
@@ -100,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
                         StepNeedthreshMenu, StepSetthreshMenu,
                         HumidityNeedthreshMenu, HumiditySetthreshMenu;
 
-    private FileHelper fileHelper;
-
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +116,12 @@ public class MainActivity extends AppCompatActivity {
         Init();
         SetCheckBox();
         SetStartButton();
-        SetViewPage();
-        reviseViewpagerConfigurePara();
+
     }
     //项目综述
-    private String ProjectInfo;
+    private String ProjectInfo = "";
+    private final SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
+    private boolean UseSensor;
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("UseCompatLoadingForDrawables")
     private void SetStartButton() {
@@ -127,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         StartButton.setOnClickListener(v -> {
 
             if(ProjectName.getText().toString().isEmpty()){
-
                 //触发震动事件
                 Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 VibrationEffect effect = VibrationEffect.createOneShot(200, 200);
@@ -162,18 +165,107 @@ public class MainActivity extends AppCompatActivity {
                 CheckSensorOptionState(UseLight, NeedLightthresh, Lightthresh, "Light Sensor", "lux");
                 CheckSensorOptionState(UseTemp, NeedTempthresh, Tempthresh, "Ambient Temperature Sensor", "℃");
                 CheckSensorOptionState(UseHumidity, NeedHumiditythresh, Humiditythresh, "Relative Humidity Sensor", "%");
-                CheckSensorOptionState(UsePressure, NeedPressurethresh, Pressurethresh, "Pressure Sensor", "kPa");
+                CheckSensorOptionState(UsePressure, NeedPressurethresh, Pressurethresh, "Pressure Sensor", "hPa");
                 CheckSensorOptionState(UseStep, NeedStepthresh, Stepthresh, "Step Counter", "steps");
 
-                Log.d("ProjectInfo", ProjectInfo);
+                //下面进行两件事情
+                //一是点击开始按钮加载主界面，主界面的内容与自定义的需求有关
+                //确保至少选择一个项目
+                //定制主界面
+                if(UseSensor || UseObjectDetection.isChecked()){
+                    SetViewPage();
+                    reviseViewpagerConfigurePara();
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        //已经授予文件读写权限
+                        //创建文件夹并保存文件
+                        //二是在子线程中进行文件读写
+                        new Thread(() -> {
+                            // 在子线程中执行文件夹创建和文件读写操作
+                            File Project = new File(getApplicationContext().getFilesDir().getAbsolutePath() +  "/Senner/" + ProjectName.getText());
+                            sharedPreferenceHelper.putString(this,"APP Path", getApplicationContext().getFilesDir().getAbsolutePath() +  "/Senner");
+                            sharedPreferenceHelper.putString(this,"Project Path", Project.getPath() + "/");
+
+                            try {
+                                if (Project.exists()) {
+                                    Project.delete(); //删除原有文件夹
+                                }
+                                Project.mkdirs(); //创建新的文件夹
+                                //项目综述文件
+                                File file = new File(Project.getPath() + "/ProjectInfo.txt");
+                                if (file.exists()) {
+                                    file.delete(); //删除原有文件夹
+                                }
+                                file.createNewFile();
+
+                                FileWriter writer = new FileWriter(file);
+                                writer.write(ProjectInfo);
+                                writer.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            //在子线程中使用Handler更新UI
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                //在主线程中更新UI
+                                StyleableToast.makeText(MainActivity.this, "Prepared!", R.style.RightToast).show();
+                                OpenViewPage();
+                            });
+                        }).start();
+                    } else {
+                        //尚未授予文件读写权限
+                        //申请文件读写权限
+                        ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+                    }
+                }else{
+                    Vibrate(200);
+                    StyleableToast.makeText(MainActivity.this, "Choose Nothing!", R.style.WarningToast).show();
+                }
 
             }
 
         });
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    private void OpenViewPage() {
+
+        //设置动画
+        Animation MenuAnimation = AnimationUtils.loadAnimation(this, R.anim.main_sheet_out);
+        //设置背景隐藏
+        menu.setClickable(false);
+        menu.setFocusable(false);
+        menu.startAnimation(MenuAnimation);
+        menu.setVisibility(View.GONE);
+        //主界面过渡动画
+        Animation ViewPageAnimation = AnimationUtils.loadAnimation(this, R.anim.main_view_in);
+        viewPager.setClickable(true);
+        viewPager.setFocusable(true);
+        viewPager.setVisibility(View.VISIBLE);
+        viewPager.startAnimation(ViewPageAnimation);
+        //如果主界面动画结束，TabLayout缓缓升起
+        Animation TabAnimation = AnimationUtils.loadAnimation(this, R.anim.main_tab_up);
+        tabLayout.setClickable(true);
+        tabLayout.setFocusable(true);
+        tabLayout.setVisibility(View.VISIBLE);
+        tabLayout.startAnimation(TabAnimation);
+    }
+
+
+    private void Vibrate(int amplify) {
+        //触发震动事件
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        VibrationEffect effect = VibrationEffect.createOneShot(100, amplify);
+        // 检查设备是否支持 VibratorEffect 对象
+        if (vibrator.hasAmplitudeControl()) {
+            // 设备支持 VibratorEffect 对象
+            vibrator.vibrate(effect);
+        } else {
+            // 设备不支持 VibratorEffect 对象
+            vibrator.vibrate(100);
+        }
+    }
+
+    @SuppressLint({"UseCompatLoadingForDrawables", "ResourceType", "SetTextI18n"})
     private void CheckSensorOptionState(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useSensor, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch needthresh, EditText threshX, EditText threshY, EditText threshZ, String SensorName, String Dimension) {
+
         if(useSensor.isChecked() && needthresh.isChecked() && !threshX.getText().toString().isEmpty() && !threshY.getText().toString().isEmpty() && !threshZ.getText().toString().isEmpty()){
 
             ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + threshX.getText().toString() +" " + Dimension +", " + threshY.getText().toString() +" " + Dimension  + ", " + threshZ.getText().toString() + " " + Dimension + "\n";
@@ -189,19 +281,40 @@ public class MainActivity extends AppCompatActivity {
         else if(useSensor.isChecked() && needthresh.isChecked() && (threshX.getText().toString().isEmpty() || threshY.getText().toString().isEmpty() || threshZ.getText().toString().isEmpty())){
 
             if(threshX.getText().toString().isEmpty()){
+                threshX.setText("9999");
                 threshX.setBackground(getDrawable(R.drawable.bg_red));
             }
             if(threshY.getText().toString().isEmpty()){
+                threshY.setText("9999");
                 threshY.setBackground(getDrawable(R.drawable.bg_red));
             }
             if(threshZ.getText().toString().isEmpty()){
+                threshZ.setText("9999");
                 threshZ.setBackground(getDrawable(R.drawable.bg_red));
             }
+            ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + threshX.getText().toString() +" " + Dimension +", " + threshY.getText().toString() +" " + Dimension  + ", " + threshZ.getText().toString() + " " + Dimension + "\n";
+        }
+
+        if(useSensor.isChecked()){
+            UseSensor = true;
+            sharedPreferenceHelper.putBoolean(this, "Use " + SensorName , true);
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "Use " + SensorName , false);
+        }
+
+        if(needthresh.isChecked()){
+            sharedPreferenceHelper.putBoolean(this, "Need Thresh " + SensorName , true);
+            sharedPreferenceHelper.putFloat(this, "Thresh X " + SensorName, Float.parseFloat(threshX.getText().toString()));
+            sharedPreferenceHelper.putFloat(this, "Thresh Y " + SensorName, Float.parseFloat(threshY.getText().toString()));
+            sharedPreferenceHelper.putFloat(this, "Thresh Z " + SensorName, Float.parseFloat(threshZ.getText().toString()));
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "Need Thresh " + SensorName , false);
         }
     }
     //重载单阈值方法
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint({"UseCompatLoadingForDrawables", "ResourceType", "SetTextI18n"})
     private void CheckSensorOptionState(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useSensor, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch needthresh, EditText thresh, String SensorName, String Dimension) {
+
         if(useSensor.isChecked() && needthresh.isChecked() && !thresh.getText().toString().isEmpty()){
 
             ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + thresh.getText().toString() +" " + Dimension + "\n";
@@ -215,12 +328,25 @@ public class MainActivity extends AppCompatActivity {
             ProjectInfo += "Use "+ SensorName + " : "  + "true" + "\n" + "Need Thresh: " + "false" + "\n";
         }
         else if(useSensor.isChecked() && needthresh.isChecked() && thresh.getText().toString().isEmpty()){
-
-
+            thresh.setText("9999");
             thresh.setBackground(getDrawable(R.drawable.bg_red));
-
-
+            ProjectInfo += "Use "+ SensorName + " : " + "true" + "\n" + "Need Thresh: " + "true " + "\r" + thresh.getText().toString() +" " + Dimension + "\n";
         }
+
+        if(useSensor.isChecked()){
+            UseSensor = true;
+            sharedPreferenceHelper.putBoolean(this, "Use " + SensorName , true);
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "Use " + SensorName , false);
+        }
+
+        if(needthresh.isChecked()){
+            sharedPreferenceHelper.putBoolean(this, "Need Thresh " + SensorName , true);
+            sharedPreferenceHelper.putFloat(this, "Thresh " + SensorName, Float.parseFloat(thresh.getText().toString()));
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "Need Thresh " + SensorName , false);
+        }
+
     }
 
     /**
@@ -232,6 +358,7 @@ public class MainActivity extends AppCompatActivity {
         //绑定控件
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
+        menu = findViewById(R.id.menu);
 
         LinearAccNeedthreshMenu = findViewById(R.id.option_linearacc_need_thresh);
         LinearAccSetthreshMenu = findViewById(R.id.option_linearacc_thresh);
@@ -317,17 +444,13 @@ public class MainActivity extends AppCompatActivity {
 
         //绑定按钮
         StartButton = findViewById(R.id.btn_start);
-
         //设置高斯模糊
         blurView_bottom = findViewById(R.id.blurView_bottom);
         root = findViewById(R.id.root);
         setupBlurView();
 
-        //文件读写
-        fileHelper = new FileHelper();
     }
 
-    private boolean IsUseObjectDetection = false;
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void SetCheckBox() {
 
@@ -343,37 +466,20 @@ public class MainActivity extends AppCompatActivity {
         UsePressure.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UsePressure, PressureNeedthreshMenu, NeedPressurethresh, PressureSetthreshMenu));
         UseHumidity.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseHumidity, HumidityNeedthreshMenu, NeedHumiditythresh, HumiditySetthreshMenu));
         UseStep.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseStep, StepNeedthreshMenu, NeedStepthresh, StepSetthreshMenu));
-        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> {IsUseObjectDetection = UseObjectDetection.isChecked();});
+        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void SetNeedthreshMenuVisibility(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch UseSensor, LinearLayout NeedthreshMenu, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch Needthresh, LinearLayout SetthreshMenu) {
 
-        //触发震动事件
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        VibrationEffect effect = VibrationEffect.createOneShot(200, VibrationEffect.EFFECT_HEAVY_CLICK);
-        // 检查设备是否支持 VibratorEffect 对象
-        if (vibrator.hasAmplitudeControl()) {
-            // 设备支持 VibratorEffect 对象
-            vibrator.vibrate(effect);
-        } else {
-            // 设备不支持 VibratorEffect 对象
-            vibrator.vibrate(200);
-        }
+        Vibrate(20);
 
         if(UseSensor.isChecked()){
             NeedthreshMenu.setVisibility(View.VISIBLE);
             Needthresh.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-                // 检查设备是否支持 VibratorEffect 对象
-                if (vibrator.hasAmplitudeControl()) {
-                    // 设备支持 VibratorEffect 对象
-                    vibrator.vibrate(effect);
-                } else {
-                    // 设备不支持 VibratorEffect 对象
-                    vibrator.vibrate(200);
-                }
-
+                Vibrate(20);
                 if(Needthresh.isChecked()){
                     SetthreshMenu.setVisibility(View.VISIBLE);
                 }else{
@@ -426,21 +532,26 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("UseCompatLoadingForDrawables")
     private void SetViewPage() {
 
+
         //禁用预加载
         viewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
 
-        fragments = new ArrayList<>();
+        ArrayList<Fragment> fragments = new ArrayList<>();
         icons = new ArrayList<>();
-        fragments.add(new SensorsFragment());
-        fragments.add(new ObjectDetectionFragment());
+        if(UseSensor){
+            fragments.add(new SensorRecordFragment());
+            icons.add(getDrawable(R.drawable.round_sensors_36dp));
+        }
+        if(UseObjectDetection.isChecked()){
+            fragments.add(new ObjectDetectionFragment());
+            icons.add(getDrawable(R.drawable.round_cv_36dp));
+        }
         fragments.add(new ProjectFragment());
         fragments.add(new UserFragment());
-        icons.add(getDrawable(R.drawable.round_sensors_36dp));
-        icons.add(getDrawable(R.drawable.round_cv_36dp));
         icons.add(getDrawable(R.drawable.round_projects_36dp));
         icons.add(getDrawable(R.drawable.round_user_36dp));
 
-        viewPageAdapter = new ViewPageAdapter(this, fragments);
+        ViewPageAdapter viewPageAdapter = new ViewPageAdapter(this, fragments);
         viewPager.setAdapter(viewPageAdapter);
         viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
@@ -460,7 +571,7 @@ public class MainActivity extends AppCompatActivity {
             touchSlopField.setAccessible(true);
 
             final int touchSlop = (int) touchSlopField.get(recyclerView);
-            touchSlopField.set(recyclerView, touchSlop * 6);//6 is empirical value
+            touchSlopField.set(recyclerView, touchSlop * 5);//6 is empirical value
         } catch (Exception ignore) {
         }
     }

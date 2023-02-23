@@ -19,9 +19,12 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChartView {
 
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(10);
     /**
      *
      * @param lineChart 需要初始化的LineChart
@@ -103,7 +106,7 @@ public class ChartView {
         xAxis.setTextSize(12f);
         xAxis.setGridLineWidth(1); // 网格线宽度，dp，默认1dp
         xAxis.setAxisLineWidth(2);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.enableGridDashedLine(20, 10, 1);
 
         YAxis yAxis = lineChart.getAxisLeft(); // 获取Y轴,mLineChart.getAxis(YAxis.AxisDependency.LEFT);也可以获取Y轴
@@ -176,9 +179,9 @@ public class ChartView {
     /**
      *
      * @param chart 所需传数据折线图
-     * @param Values0 储存第一组数据的列表
-     * @param Values1 储存第二组数据的列表
-     * @param Values2 储存第三组数据的列表
+     * @param values0 储存第一组数据的列表
+     * @param values1 储存第二组数据的列表
+     * @param values2 储存第三组数据的列表
      * @param value0 第一组数据
      * @param value1 第二组数据
      * @param value2 第三组数据
@@ -191,100 +194,81 @@ public class ChartView {
      * @param isShowValueText 是否显示数据
      */
     public void SetLineChartData(LineChart chart,
-                                 ArrayList<Entry> Values0, ArrayList<Entry> Values1, ArrayList<Entry> Values2,
-                                   float value0, float value1, float value2,
-                                   String string0, String string1, String string2,
-                                   int color0, int color1, int color2,
-                                    boolean isShowValueText)
-    {
+                                 ArrayList<Entry> values0, ArrayList<Entry> values1, ArrayList<Entry> values2,
+                                 float value0, float value1, float value2,
+                                 String string0, String string1, String string2,
+                                 int color0, int color1, int color2,
+                                 boolean isShowValueText) {
 
-        Values0.add(new Entry(Values0.size(),value0));
-        Values1.add(new Entry(Values1.size(),value1));
-        Values2.add(new Entry(Values2.size(),value2));
+        threadPool.submit(() -> {
+            values0.add(new Entry(values0.size(), value0));
+            values1.add(new Entry(values1.size(), value1));
+            values2.add(new Entry(values2.size(), value2));
 
-        //设置曲线
-        LineDataSet set0, set1, set2;
-        if (chart.getData() != null && chart.getData().getDataSetCount() >= 0) {
+            LineData lineData = chart.getData();
 
-            set0 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set0.setValues(Values0);
-            set0.notifyDataSetChanged();
+            if (lineData == null) {
+                LineDataSet set0 = new LineDataSet(values0, string0);
+                LineDataSet set1 = new LineDataSet(values1, string1);
+                LineDataSet set2 = new LineDataSet(values2, string2);
 
-            set1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-            set1.setValues(Values1);
-            set1.notifyDataSetChanged();
+                setLineDataSet(set0, color0, isShowValueText);
+                setLineDataSet(set1, color1, isShowValueText);
+                setLineDataSet(set2, color2, isShowValueText);
 
-            set2 = (LineDataSet) chart.getData().getDataSetByIndex(2);
-            set2.setValues(Values2);
-            set2.notifyDataSetChanged();
+                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                dataSets.add(set0);
+                dataSets.add(set1);
+                dataSets.add(set2);
 
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
+                lineData = new LineData(dataSets);
+                chart.setData(lineData);
 
-        } else {
-            set0 = new LineDataSet(Values0, string0);
-            set0.setValueTextSize(3f);
-            set0.setColor(color0);
-            set0.setValueTextColor(color0);
-            set0.setDrawIcons(true);
-            set0.setCircleColor(color0);
-            set0.setLineWidth(2f);
-            set0.setCircleRadius(2f);
+            } else {
+                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(0), color0, isShowValueText);
+                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(1), color1, isShowValueText);
+                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(2), color2, isShowValueText);
 
-            set1 = new LineDataSet(Values1, string1);
-            set1.setValueTextSize(3f);
-            set1.setColor(color1);
-            set1.setValueTextColor(color1);
-            set1.setDrawIcons(true);
-            set1.setCircleColor(color1);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(2f);
-
-            set2 = new LineDataSet(Values2, string2);
-            set2.setValueTextSize(3f);
-            set2.setColor(color2);
-            set2.setValueTextColor(color2);
-            set2.setDrawIcons(true);
-            set2.setCircleColor(color2);
-            set2.setLineWidth(2f);
-            set2.setCircleRadius(2f);
-
-            if(!isShowValueText) {
-                set0.setValueTextSize(0);
-                set1.setValueTextSize(0);
-                set2.setValueTextSize(0);
+                lineData.notifyDataChanged();
+                chart.notifyDataSetChanged();
             }
 
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            //都添加进列表中
-            dataSets.add(set0);
-            dataSets.add(set1);
-            dataSets.add(set2);
-            LineData lineData;
+            YAxis yAxis = chart.getAxisLeft();
+            float maxY = yAxis.getAxisMaximum();
+            float minY = yAxis.getAxisMinimum();
 
-            lineData = new LineData(dataSets);
-            chart.setData(lineData);
+            float valueMax = Math.max(Math.max(value0, value1), value2);
+            float valueMin = Math.min(Math.min(value0, value1), value2);
+            float nExpend = 1;
+
+            if (maxY == 0 && minY == 0) {
+                yAxis.setAxisMaximum(valueMax + nExpend);
+                yAxis.setAxisMinimum(valueMin - nExpend);
+            } else {
+                if (valueMax > maxY) {
+                    yAxis.setAxisMaximum(valueMax + nExpend);
+                }
+                if (valueMin < minY) {
+                    yAxis.setAxisMinimum(valueMin - nExpend);
+                }
+            }
+            chart.postInvalidate();
+        });
+    }
+
+    private void setLineDataSet(LineDataSet set, int color, boolean isShowValueText) {
+        set.setValueTextSize(3f);
+        set.setColor(color);
+        set.setValueTextColor(color);
+        set.setCircleColor(color);
+        set.setLineWidth(2f);
+        set.setCircleRadius(1f);
+
+        if (!isShowValueText) {
+            set.setValueTextSize(0);
         }
-        //set Max and Min Y value
-        YAxis y = chart.getAxisLeft();
-        float nMax = y.getAxisMaximum();
-        float nMin = y.getAxisMinimum();
-        float valueMax = Math.max(Math.max(value0, value1), value2);
-        float valueMin = Math.min(Math.min(value0, value1), value2);
-        float nExpend = 1;//保证曲线始终全部显示
-        if(nMax == 0 && nMin == 0){
-            y.setAxisMaximum(valueMax + nExpend);
-            y.setAxisMinimum(valueMin - nExpend);
-        }else {
-            if (valueMax > nMax) {
-                y.setAxisMaximum(valueMax + nExpend);
-            }
-            if (valueMin < nMin) {
-                y.setAxisMinimum(valueMin - nExpend);
-            }
-        }
-        //redraw
-        chart.invalidate();
+
+        set.notifyDataSetChanged();
     }
     /**
      *
@@ -303,195 +287,188 @@ public class ChartView {
                                  int color0, int color1,
                                  boolean isShowValueText)
     {
-//        // Clear previous chart data
-//        chart.clear();
-//        chart.notifyDataSetChanged();
-//        chart.invalidate();
 
-        LineDataSet set0, set1;
+        // 在另一个线程中修改数据
+        threadPool.submit(new Thread(() -> {
+            LineDataSet set0, set1;
+            set0 = new LineDataSet(Values0, string0);
+            set0.setValueTextSize(3f);
+            set0.setColor(color0);
+            set0.setValueTextColor(color0);
+            set0.setCircleColor(color0);
+            set0.setLineWidth(2f);
+            set0.setCircleRadius(1f);
 
-        set0 = new LineDataSet(Values0, string0);
-        set0.setValueTextSize(3f);
-        set0.setColor(color0);
-        set0.setValueTextColor(color0);
-        set0.setDrawIcons(true);
-        set0.setCircleColor(color0);
-        set0.setLineWidth(2f);
-        set0.setCircleRadius(2f);
+            set1 = new LineDataSet(Values1, string1);
+            set1.setValueTextSize(3f);
+            set1.setColor(color1);
+            set1.setValueTextColor(color1);
+            set1.setCircleColor(color1);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(1f);
 
-        set1 = new LineDataSet(Values1, string1);
-        set1.setValueTextSize(3f);
-        set1.setColor(color1);
-        set1.setValueTextColor(color1);
-        set1.setDrawIcons(true);
-        set1.setCircleColor(color1);
-        set1.setLineWidth(2f);
-        set1.setCircleRadius(2f);
-
-        if(!isShowValueText) {
-            set0.setValueTextSize(0);
-            set1.setValueTextSize(0);
-        }
-
-        //添加新数据
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        //都添加进列表中
-        dataSets.add(set0);
-        dataSets.add(set1);
-
-        LineData lineData = new LineData(dataSets);
-        chart.setData(lineData);
-        chart.notifyDataSetChanged();
-
-        //set Max and Min Y value
-        YAxis y = chart.getAxisLeft();
-        XAxis x = chart.getXAxis();
-
-        float XMax = x.getAxisMinimum();
-        float XMin = x.getAxisMaximum();
-        float YMax = y.getAxisMaximum();
-        float YMin = y.getAxisMinimum();
-
-        //遍历找到
-        float maxCenterX = 0;
-        float maxTimeX = 0;
-        float minCenterX = 0;
-        float minTimeX = 0;
-        for (Entry entry : Values0) {
-            if (entry.getY() > maxCenterX) {
-                maxCenterX = entry.getY();
+            if(!isShowValueText) {
+                set0.setValueTextSize(0);
+                set1.setValueTextSize(0);
             }
-            if(entry.getX() > maxTimeX){
-                maxTimeX = entry.getX();
-            }
-            if(entry.getY() < minCenterX){
-                minCenterX = entry.getY();
-            }
-            if(entry.getX() < minTimeX){
-                minTimeX = entry.getX();
-            }
-        }
+            //set Max and Min Y value
+            //都添加进列表中
+            //添加新数据
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set0);
+            dataSets.add(set1);
+            LineData lineData = new LineData(dataSets);
+            chart.setData(lineData);
+            chart.notifyDataSetChanged();
 
-        //遍历找到
-        float maxCenterY = 0;
-        float maxTimeY = 0;
-        float minCenterY = 0;
-        float minTimeY = 0;
-        for (Entry entry : Values1) {
-            if (entry.getY() > maxCenterY) {
-                maxCenterY = entry.getY();
-            }
-            if(entry.getX() > maxTimeY){
-                maxTimeY = entry.getX();
-            }
-            if(entry.getY() < minCenterY){
-                minCenterY = entry.getY();
-            }
-            if(entry.getX() < minTimeY){
-                minTimeY = entry.getX();
-            }
-        }
+            YAxis y = chart.getAxisLeft();
+            XAxis x = chart.getXAxis();
 
-        float CenterMax = Math.max(maxCenterX, maxCenterY);
-        float CenterMin = Math.min(minCenterX, minCenterY);
-        float TimeMax = Math.max(maxTimeX, maxTimeY);
-        float TimeMin = Math.min(minTimeX, minTimeY);
+            float XMax = x.getAxisMinimum();
+            float XMin = x.getAxisMaximum();
+            float YMax = y.getAxisMaximum();
+            float YMin = y.getAxisMinimum();
 
-        float nExpend = 1;//保证曲线始终全部显示
-
-        if(YMax == 0 && YMin == 0 && XMax == 0 && XMin == 0){
-            x.setAxisMinimum(TimeMin - nExpend);
-            x.setAxisMaximum(TimeMax + nExpend);
-            y.setAxisMaximum(CenterMax + nExpend);
-            y.setAxisMinimum(CenterMin - nExpend);
-        }else {
-            if(TimeMax > XMax){
-                x.setAxisMaximum(TimeMax + nExpend);
+            //遍历找到
+            float maxCenterX = 0;
+            float maxTimeX = 0;
+            float minCenterX = 0;
+            float minTimeX = 0;
+            for (Entry entry : Values0) {
+                if (entry.getY() > maxCenterX) {
+                    maxCenterX = entry.getY();
+                }
+                if(entry.getX() > maxTimeX){
+                    maxTimeX = entry.getX();
+                }
+                if(entry.getY() < minCenterX){
+                    minCenterX = entry.getY();
+                }
+                if(entry.getX() < minTimeX){
+                    minTimeX = entry.getX();
+                }
             }
-            if(TimeMin < XMin){
+
+            //遍历找到
+            float maxCenterY = 0;
+            float maxTimeY = 0;
+            float minCenterY = 0;
+            float minTimeY = 0;
+            for (Entry entry : Values1) {
+                if (entry.getY() > maxCenterY) {
+                    maxCenterY = entry.getY();
+                }
+                if(entry.getX() > maxTimeY){
+                    maxTimeY = entry.getX();
+                }
+                if(entry.getY() < minCenterY){
+                    minCenterY = entry.getY();
+                }
+                if(entry.getX() < minTimeY){
+                    minTimeY = entry.getX();
+                }
+            }
+
+            float CenterMax = Math.max(maxCenterX, maxCenterY);
+            float CenterMin = Math.min(minCenterX, minCenterY);
+            float TimeMax = Math.max(maxTimeX, maxTimeY);
+            float TimeMin = Math.min(minTimeX, minTimeY);
+
+            float nExpend = 1;//保证曲线始终全部显示
+
+            if(YMax == 0 && YMin == 0 && XMax == 0 && XMin == 0){
                 x.setAxisMinimum(TimeMin - nExpend);
-            }
-            if (CenterMax > YMax) {
+                x.setAxisMaximum(TimeMax + nExpend);
                 y.setAxisMaximum(CenterMax + nExpend);
-            }
-            if (CenterMin < YMin) {
                 y.setAxisMinimum(CenterMin - nExpend);
+            }else {
+                if(TimeMax > XMax){
+                    x.setAxisMaximum(TimeMax + nExpend);
+                }
+                if(TimeMin < XMin){
+                    x.setAxisMinimum(TimeMin - nExpend);
+                }
+                if (CenterMax > YMax) {
+                    y.setAxisMaximum(CenterMax + nExpend);
+                }
+                if (CenterMin < YMin) {
+                    y.setAxisMinimum(CenterMin - nExpend);
+                }
             }
-        }
 
-        //redraw
-        chart.invalidate();
+
+            // 在另一个线程中调用postInvalidate()方法
+            chart.postInvalidate();
+        }));
     }
     /**
      *
      * @param chart 所需传入数据折线图
-     * @param Values 储存数据的列表，必须是全局的
+     * @param values 储存数据的列表，必须是全局的
      * @param value 数据
      * @param string 数据名称
      * @param color 折线颜色
      * @param isShowValueText 是否显示数据
      */
     public void SetLineChartData(LineChart chart,
-                                 ArrayList<Entry> Values,
+                                 ArrayList<Entry> values,
                                  float value,
                                  String string,
                                  int color,
                                  boolean isShowValueText)
     {
+        // 在另一个线程中修改数据
+        threadPool.submit(() -> {
+            //设置曲线
+            LineDataSet set;
+            // 增加或删除数据点等操作
+            values.add(new Entry(values.size(), value));
+            if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
+                set = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                set.setValues(values);
+                chart.getData().notifyDataChanged();
+                chart.notifyDataSetChanged();
+            } else {
+                set = new LineDataSet(values, string);
+                set.setValueTextSize(3f);
+                set.setColor(color);
+                set.setValueTextColor(color);
+                set.setCircleColor(color);
+                set.setLineWidth(2f);
+                set.setCircleRadius(1f);
 
+                if (!isShowValueText) {
+                    set.setValueTextSize(0);
+                }
 
-        Values.add(new Entry(Values.size(),value));
-
-        //设置曲线
-        LineDataSet set;
-        if (chart.getData() != null && chart.getData().getDataSetCount() >= 0) {
-
-            set = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set.setValues(Values);
-            set.notifyDataSetChanged();
-
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-
-        } else {
-            set = new LineDataSet(Values, string);
-            set.setValueTextSize(3f);
-            set.setColor(color);
-            set.setValueTextColor(color);
-            set.setDrawIcons(true);
-            set.setCircleColor(color);
-            set.setLineWidth(2f);
-            set.setCircleRadius(2f);
-
-            if(!isShowValueText) {
-                set.setValueTextSize(0);
+                //都添加进列表中
+                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                dataSets.add(set);
+                LineData lineData = new LineData(dataSets);
+                chart.setData(lineData);
             }
 
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            //都添加进列表中
-            dataSets.add(set);
-            LineData lineData;
-            lineData = new LineData(dataSets);
-            chart.setData(lineData);
-        }
-        //set Max and Min Y value
-        YAxis y = chart.getAxisLeft();
-        float nMax = y.getAxisMaximum();
-        float nMin = y.getAxisMinimum();
-        float nExpend = 1;//保证曲线始终全部显示
-        if(nMax == 0 && nMin == 0){
-            y.setAxisMaximum(value + nExpend);
-            y.setAxisMinimum(value - nExpend);
-        }else {
-            if (value > nMax) {
+            //set Max and Min Y value
+            YAxis y = chart.getAxisLeft();
+            float nMax = y.getAxisMaximum();
+            float nMin = y.getAxisMinimum();
+            float nExpend = 1;//保证曲线始终全部显示
+            if (nMax == 0 && nMin == 0) {
                 y.setAxisMaximum(value + nExpend);
-            }
-            if (value < nMin) {
                 y.setAxisMinimum(value - nExpend);
+            } else {
+                if (value > nMax) {
+                    y.setAxisMaximum(value + nExpend);
+                }
+                if (value < nMin) {
+                    y.setAxisMinimum(value - nExpend);
+                }
             }
-        }
-        //redraw
-        chart.invalidate();
+
+            // 在另一个线程中调用postInvalidate()方法
+            chart.postInvalidate();
+        });
     }
+
 
 }

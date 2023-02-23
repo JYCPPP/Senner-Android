@@ -108,17 +108,19 @@
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_location.xml" value="0.23385416666666667" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_object_detection.xml" value="0.176" />
-        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_project.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_project.xml" value="0.23048327137546468" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_register.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_reset_password.xml" value="0.23385416666666667" />
-        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_sensor_record.xml" value="0.264" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_sensor_record.xml" value="0.1496875" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_sensors.xml" value="0.2" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_settings.xml" value="0.23385416666666667" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_start.xml" value="0.22760416666666666" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_start_experiment.xml" value="0.22760416666666666" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/fragment_user.xml" value="0.264" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/item_card.xml" value="0.4" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/list_item.xml" value="0.6" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/listview_row.xml" value="0.1890625" />
+        <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/main_menu.xml" value="0.16979166666666667" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/nav_header_main.xml" value="0.264" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/reset_password.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/jyc/Desktop/TFLITE/Senner/app/src/main/res/layout/source_code_link.xml" value="0.2" />

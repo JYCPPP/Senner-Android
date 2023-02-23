@@ -3,7 +3,7 @@
     <color name="backgroundEditText">#5cffffff</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="star">#0A385E</color>
-    <color name="colorOverlay">#80B0BED3</color>
+    <color name="colorOverlay">#804A5059</color>
     <color name="colorOverlay_black">#66000000</color>
     <color name="APPbackground">@color/navy</color>
     <color name="Iconbackground">@color/snow</color>

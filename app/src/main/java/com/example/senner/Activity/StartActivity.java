@@ -1,7 +1,6 @@
 package com.example.senner.Activity;
 
 import android.os.Bundle;
-import android.transition.Explode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
