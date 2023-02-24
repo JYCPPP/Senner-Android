@@ -2023,7 +2023,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:backgroundTint="@color/APPbackground"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:fontFamily="@font/lxgw_bold"
             android:text="Let's Go"
             android:textAllCaps="false"

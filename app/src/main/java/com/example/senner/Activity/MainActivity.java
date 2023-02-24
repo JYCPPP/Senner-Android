@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -48,6 +49,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import eightbitlab.com.blurview.BlurAlgorithm;
@@ -56,7 +58,7 @@ import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import io.github.muddz.styleabletoast.StyleableToast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserFragment.UserFragmentInterface {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     Proximitythresh, Lightthresh, Tempthresh,
                     Pressurethresh, Humiditythresh, Stepthresh;
 
+
     private Button StartButton;
 
     private LinearLayout LinearAccNeedthreshMenu, LinearAccSetthreshMenu,
@@ -113,11 +116,44 @@ public class MainActivity extends AppCompatActivity {
 
         //设置沉浸式状态栏
         ImmersionBar.with(this).init();
+        //绑定控件
         Init();
+        //设置CheckBox，保存勾选状态
         SetCheckBox();
+        //设置点击开始按钮要做的事情
         SetStartButton();
+        //设置输入状态的转换
+        SetEditTextFoucus();
 
     }
+
+    /**
+     * 处理输入框的聚焦逻辑，避免一直在输入状态
+     */
+    private void SetEditTextFoucus() {
+
+        List<EditText> editTexts = List.of(
+                LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ,
+                AccthreshX, AccthreshY, AccthreshZ,
+                GyrothreshX, GyrothreshY, GyrothreshZ,
+                RotthreshX, RotthreshY, RotthreshZ,
+                MRotthreshX, MRotthreshY, MRotthreshZ,
+                MagthreshX, MagthreshY, MagthreshZ,
+                Proximitythresh, Lightthresh, Tempthresh,
+                Pressurethresh, Humiditythresh, Stepthresh);
+
+        for(EditText editText : editTexts){
+
+            editText.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    // 输入完成后的逻辑处理，例如关闭输入法等
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                }
+            });
+        }
+    }
+
     //项目综述
     private String ProjectInfo = "";
     private final SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
@@ -162,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 CheckSensorOptionState(UseMag, NeedMagthresh, MagthreshX, MagthreshY, MagthreshZ, "Magnetic Field Sensor", "μT");
                 CheckSensorOptionState(UseGyro, NeedGyrothresh, GyrothreshX, GyrothreshY, GyrothreshZ, "Gyroscope", "°");
                 CheckSensorOptionState(UseProximity, NeedProximitythresh, Proximitythresh, "Proximity Sensor", "cm");
-                CheckSensorOptionState(UseLight, NeedLightthresh, Lightthresh, "Light Sensor", "lux");
+                CheckSensorOptionState(UseLight, NeedLightthresh, Lightthresh, "Light Sensor", "lx");
                 CheckSensorOptionState(UseTemp, NeedTempthresh, Tempthresh, "Ambient Temperature Sensor", "℃");
                 CheckSensorOptionState(UseHumidity, NeedHumiditythresh, Humiditythresh, "Relative Humidity Sensor", "%");
                 CheckSensorOptionState(UsePressure, NeedPressurethresh, Pressurethresh, "Pressure Sensor", "hPa");
@@ -173,8 +209,6 @@ public class MainActivity extends AppCompatActivity {
                 //确保至少选择一个项目
                 //定制主界面
                 if(UseSensor || UseObjectDetection.isChecked()){
-                    SetViewPage();
-                    reviseViewpagerConfigurePara();
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         //已经授予文件读写权限
                         //创建文件夹并保存文件
@@ -206,6 +240,8 @@ public class MainActivity extends AppCompatActivity {
                             //在子线程中使用Handler更新UI
                             new Handler(Looper.getMainLooper()).post(() -> {
                                 //在主线程中更新UI
+                                SetViewPage();
+                                reviseViewpagerConfigurePara();
                                 StyleableToast.makeText(MainActivity.this, "Prepared!", R.style.RightToast).show();
                                 OpenViewPage();
                             });
@@ -248,6 +284,27 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.startAnimation(TabAnimation);
     }
 
+    private void CloseViewPage(){
+        //如果主界面动画结束，TabLayout缓缓升起
+        Animation TabAnimation = AnimationUtils.loadAnimation(this, R.anim.main_tab_down);
+        tabLayout.setClickable(false);
+        tabLayout.setFocusable(false);
+        tabLayout.startAnimation(TabAnimation);
+        tabLayout.setVisibility(View.GONE);
+        //主界面过渡动画
+        Animation ViewPageAnimation = AnimationUtils.loadAnimation(this, R.anim.main_view_out);
+        viewPager.setClickable(false);
+        viewPager.setFocusable(false);
+        viewPager.startAnimation(ViewPageAnimation);
+        viewPager.setVisibility(View.GONE);
+        //设置动画
+        Animation MenuAnimation = AnimationUtils.loadAnimation(this, R.anim.main_sheet_in);
+        //设置背景隐藏
+        menu.setClickable(true);
+        menu.setFocusable(true);
+        menu.startAnimation(MenuAnimation);
+        menu.setVisibility(View.VISIBLE);
+    }
 
     private void Vibrate(int amplify) {
         //触发震动事件
@@ -453,7 +510,6 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void SetCheckBox() {
-
         UseLinearAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseLinearAcc, LinearAccNeedthreshMenu, NeedLinearAccthresh, LinearAccSetthreshMenu));
         UseAcc.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseAcc, AccNeedthreshMenu, NeedAccthresh, AccSetthreshMenu));
         UseGyro.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseGyro, GyroNeedthreshMenu, NeedGyrothresh, GyroSetthreshMenu));
@@ -532,7 +588,6 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("UseCompatLoadingForDrawables")
     private void SetViewPage() {
 
-
         //禁用预加载
         viewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
 
@@ -558,10 +613,22 @@ public class MainActivity extends AppCompatActivity {
                 tab.setIcon(icons.get(position))).attach();
     }
 
+    /**
+     * 设置页面滑动切换的灵敏度
+     */
     public void reviseViewpagerConfigurePara() {
-
-
         try {
+
+            //Java 中的反射（Reflection）是指在程序运行时动态地获取一个类的信息，并能够操作它的属性、方法和构造函数等。反射使得程序可以在运行时动态地加载、探索、使用编译时未知的类、调用对象的方法，以及创建对象的实例等。
+            //
+            //在 Java 中，反射的核心类是 java.lang.Class，每个类在运行时都有对应的 Class 对象，它包含了类的各种信息，如类的名称、属性、方法、构造函数等。通过 Class 对象，可以在程序运行时获取并操作类的各种信息。常用的反射方法包括：
+            //
+            //获取类的 Class 对象：可以使用 Class.forName() 方法、类字面常量（如 String.class）、对象的 getClass() 方法等方式获取一个类的 Class 对象。
+            //获取类的构造函数：可以使用 Class.getDeclaredConstructors() 方法获取类的所有构造函数，再使用 Constructor.newInstance() 方法创建对象的实例。
+            //获取类的方法：可以使用 Class.getDeclaredMethods() 方法获取类的所有方法，再使用 Method.invoke() 方法调用方法。
+            //获取类的字段：可以使用 Class.getDeclaredFields() 方法获取类的所有字段，再使用 Field.get()、Field.set() 等方法操作字段的值。
+            //反射的主要优点是使得代码更加灵活，能够在程序运行时根据需要动态地加载和调用类的各种信息，这对于一些需要扩展性强、动态性高的应用场景非常有用，比如插件系统、框架开发等。但是，反射也有一些缺点，如性能低、安全问题等，因此在使用反射时需要谨慎权衡利弊。
+
             final Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
             recyclerViewField.setAccessible(true);
 
@@ -574,5 +641,46 @@ public class MainActivity extends AppCompatActivity {
             touchSlopField.set(recyclerView, touchSlop * 5);//6 is empirical value
         } catch (Exception ignore) {
         }
+    }
+
+    @Override
+    public void Restart() {
+
+        //清除菜单栏记录的输入历史
+        Switch[] AllSwitch = new Switch[]{
+                UseLinearAcc, NeedLinearAccthresh,
+                UseAcc, NeedAccthresh,
+                UseGyro, NeedGyrothresh,
+                UseRot, NeedRotthresh,
+                UseMRot, NeedMRotthresh,
+                UseMag, NeedMagthresh,
+                UseProximity, NeedProximitythresh,
+                UseLight, NeedLightthresh,
+                UseTemp, NeedTempthresh,
+                UsePressure, NeedPressurethresh,
+                UseHumidity, NeedHumiditythresh,
+                UseStep, NeedStepthresh,
+                UseObjectDetection
+        };
+        for (Switch mSwitch : AllSwitch){
+            mSwitch.setChecked(false);
+        }
+        EditText[] editTexts = new EditText[]{
+                ProjectName,
+                LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ,
+                AccthreshX, AccthreshY, AccthreshZ,
+                GyrothreshX, GyrothreshY, GyrothreshZ,
+                RotthreshX, RotthreshY, RotthreshZ,
+                MRotthreshX, MRotthreshY, MRotthreshZ,
+                MagthreshX, MagthreshY, MagthreshZ,
+                Proximitythresh, Lightthresh, Tempthresh,
+                Pressurethresh, Humiditythresh, Stepthresh
+        };
+        for(EditText editText : editTexts){
+            editText.setText("");
+        }
+
+        //关闭主界面，打开菜单栏
+        CloseViewPage();
     }
 }

@@ -2,12 +2,9 @@ package com.example.senner.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -79,13 +76,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     private void openFile(File file) {
 
-    }
-
-    // 获取文件的MIME类型
-    private String getMimeType(String url) {
-        String extension = url.substring(url.lastIndexOf(".") + 1);
-        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
     }
 
     @Override

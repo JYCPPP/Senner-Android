@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.S)
 public class PermissionHelper  {
 
     //需要申请权限的数组

@@ -216,7 +216,7 @@ public final class ObjectDetectionFragment extends Fragment  {
      */
     private void ShowDisLineChart() {
 
-        chartView.SetDisplacementChartData(disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.BLUE, true);
+        chartView.SetDisplacementChartData(requireActivity(), disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.BLUE, true);
 
     }
 

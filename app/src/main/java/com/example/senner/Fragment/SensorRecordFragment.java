@@ -105,7 +105,6 @@ public class SensorRecordFragment extends Fragment {
     //创建线程池
     private final ExecutorService threadPool = Executors.newFixedThreadPool(12);
 
-    private final int MAX_POINT_SIZE = 1000;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sensor_record, container, false);
@@ -185,7 +184,6 @@ public class SensorRecordFragment extends Fragment {
         PressureChart = view.findViewById(R.id.pressureChart);
         HumidityChart = view.findViewById(R.id.humidityChart);
 
-
         //初始化传感器管理器
         mSManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         listofSensor = mSManager.getSensorList(TYPE_ALL);
@@ -234,50 +232,66 @@ public class SensorRecordFragment extends Fragment {
 
     }
 
+    private File LinearAccData, AccData, GyroData, RotData, MRotData, MagData,
+            ProximityData, LightData, TempData, PressureData, StepData, HumidityData;
     /**
      * 根据HashMap注册传感器
      */
     private void SetUsedSensor() {
-
         final int sensorDelay = SensorManager.SENSOR_DELAY_NORMAL;
+
+        String ProjectPath = sharedPreferenceHelper.getString(requireActivity(),"Project Path", "");
+
         for(Map.Entry<String, SensorEventListener> entry : SensorListeners.entrySet()){
             boolean UseSensor = sharedPreferenceHelper.getBoolean(requireActivity(), entry.getKey(), true);
             if(UseSensor){
                 switch (entry.getKey()){
                     case "Use Linear Accelerometer":
+                        LinearAccData = CreateDataFile(ProjectPath + "/Sensors Data", "/LinearAccData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) ,sensorDelay);
                         break;
                     case "Use Accelerometer":
+                        AccData = CreateDataFile(ProjectPath + "/Sensors Data", "/AccData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) ,sensorDelay);
                         break;
                     case "Use Gyroscope":
+                        GyroData = CreateDataFile(ProjectPath + "/Sensors Data", "/GyroData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) ,sensorDelay);
                         break;
                     case "Use Rotation Vector Sensor":
+                        RotData = CreateDataFile(ProjectPath + "/Sensors Data", "/RotationVectorData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) ,sensorDelay);
                         break;
                     case "Use Geomagnetic Rotation Vector Sensor":
+                        MRotData = CreateDataFile(ProjectPath + "/Sensors Data", "/GeomagneticRotationVectorData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) ,sensorDelay);
                         break;
                     case "Use Magnetic Field Sensor":
+                        MagData = CreateDataFile(ProjectPath + "/Sensors Data", "/MagneticFieldData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,sensorDelay);
                         break;
                     case "Use Step Counter":
+                        StepData = CreateDataFile(ProjectPath + "/Sensors Data", "/StepData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) ,sensorDelay);
                         break;
                     case "Use Proximity Sensor":
+                        ProximityData = CreateDataFile(ProjectPath + "/Sensors Data", "/ProximityData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) ,sensorDelay);
                         break;
                     case "Use Light Sensor":
+                        LightData = CreateDataFile(ProjectPath + "/Sensors Data", "/LightData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_LIGHT) ,sensorDelay);
                         break;
                     case "Use Pressure Sensor":
+                        PressureData = CreateDataFile(ProjectPath + "/Sensors Data", "/PressureData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_PRESSURE) ,sensorDelay);
                         break;
                     case "Use Ambient Temperature Sensor":
+                        TempData = CreateDataFile(ProjectPath + "/Sensors Data", "/AmbientTemperatureData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) ,sensorDelay);
                         break;
                     case "Use Relative Humidity Sensor":
+                        HumidityData = CreateDataFile(ProjectPath + "/Sensors Data", "/HumidityData.txt");
                         mSManager.registerListener(entry.getValue(), mSManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) ,sensorDelay);
                         break;
                 }
@@ -292,30 +306,30 @@ public class SensorRecordFragment extends Fragment {
      */
     private void InitArrayList() {
         //分配初始容量来保证性能
-        linearaccX = new ArrayList<>(10000);
-        linearaccY = new ArrayList<>(10000);
-        linearaccZ = new ArrayList<>(10000);
-        accX = new ArrayList<>(10000);
-        accY = new ArrayList<>(10000);
-        accZ = new ArrayList<>(10000);
-        gyroX = new ArrayList<>(10000);
-        gyroY = new ArrayList<>(10000);
-        gyroZ = new ArrayList<>(10000);
-        rotX = new ArrayList<>(10000);
-        rotY = new ArrayList<>(10000);
-        rotZ = new ArrayList<>(10000);
-        mrotX = new ArrayList<>(10000);
-        mrotY = new ArrayList<>(10000);
-        mrotZ = new ArrayList<>(10000);
-        magX = new ArrayList<>(10000);
-        magY = new ArrayList<>(10000);
-        magZ = new ArrayList<>(10000);
-        step = new ArrayList<>(10000);
-        proximity = new ArrayList<>(10000);
-        light = new ArrayList<>(10000);
-        temperature = new ArrayList<>(10000);
-        pressure = new ArrayList<>(10000);
-        humidity = new ArrayList<>(10000);
+        linearaccX = new ArrayList<>();
+        linearaccY = new ArrayList<>();
+        linearaccZ = new ArrayList<>();
+        accX = new ArrayList<>();
+        accY = new ArrayList<>();
+        accZ = new ArrayList<>();
+        gyroX = new ArrayList<>();
+        gyroY = new ArrayList<>();
+        gyroZ = new ArrayList<>();
+        rotX = new ArrayList<>();
+        rotY = new ArrayList<>();
+        rotZ = new ArrayList<>();
+        mrotX = new ArrayList<>();
+        mrotY = new ArrayList<>();
+        mrotZ = new ArrayList<>();
+        magX = new ArrayList<>();
+        magY = new ArrayList<>();
+        magZ = new ArrayList<>();
+        step = new ArrayList<>();
+        proximity = new ArrayList<>();
+        light = new ArrayList<>();
+        temperature = new ArrayList<>();
+        pressure = new ArrayList<>();
+        humidity = new ArrayList<>();
     }
 
 
@@ -429,21 +443,6 @@ public class SensorRecordFragment extends Fragment {
 
     private void SetSensorListener() {
 
-        String ProjectPath = sharedPreferenceHelper.getString(requireActivity(),"Project Path", "");
-        //记录项目文件位置
-        File LinearAccData = CreateDataFile(ProjectPath + "/Sensors Data", "/LinearAccData.txt");
-        File AccData = CreateDataFile(ProjectPath + "/Sensors Data", "/AccData.txt");
-        File GyroData = CreateDataFile(ProjectPath + "/Sensors Data", "/GyroData.txt");
-        File RotData = CreateDataFile(ProjectPath + "/Sensors Data", "/RotationVectorData.txt");
-        File MRotData = CreateDataFile(ProjectPath + "/Sensors Data", "/GeomagneticRotationVectorData.txt");
-        File MagData = CreateDataFile(ProjectPath + "/Sensors Data", "/MagneticFieldData.txt");
-        File ProximityData = CreateDataFile(ProjectPath + "/Sensors Data", "/ProximityData.txt");
-        File LightData = CreateDataFile(ProjectPath + "/Sensors Data", "/LightData.txt");
-        File TempData = CreateDataFile(ProjectPath + "/Sensors Data", "/AmbientTemperatureData.txt");
-        File PressureData = CreateDataFile(ProjectPath + "/Sensors Data", "/PressureData.txt");
-        File StepData = CreateDataFile(ProjectPath + "/Sensors Data", "/StepData.txt");
-        File HumidityData = CreateDataFile(ProjectPath + "/Sensors Data", "/HumidityData.txt");
-
         linearacc_sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
@@ -471,18 +470,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                //设置自动清零
-                if(linearaccX.size() > MAX_POINT_SIZE){
-                    linearaccX.clear();
-                }
-                if(linearaccY.size() > MAX_POINT_SIZE){
-                    linearaccY.clear();
-                }
-                if(linearaccZ.size() > MAX_POINT_SIZE){
-                    linearaccZ.clear();
-                }
-                chartView.SetLineChartData(LinearAccelerationChart,
+                chartView.SetLineChartData(requireActivity(), LinearAccelerationChart,
                         linearaccX, linearaccY, linearaccZ,
                         sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2],
                         "Linear AccX", "Linear AccY", "Linear AccZ",
@@ -524,18 +512,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                //设置自动清零
-                if(accX.size() > MAX_POINT_SIZE){
-                    accX.clear();
-                }
-                if(accY.size() > MAX_POINT_SIZE){
-                    accY.clear();
-                }
-                if(accZ.size() > MAX_POINT_SIZE){
-                    accZ.clear();
-                }
-                chartView.SetLineChartData(AccelerationChart,
+                chartView.SetLineChartData(requireActivity(), AccelerationChart,
                         accX, accY, accZ,
                         sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2],
                         "AccX", "AccY", "AccZ",
@@ -577,18 +554,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                //设置自动清零
-                if(gyroX.size() > MAX_POINT_SIZE){
-                    gyroX.clear();
-                }
-                if(gyroY.size() > MAX_POINT_SIZE){
-                    gyroY.clear();
-                }
-                if(gyroZ.size() > MAX_POINT_SIZE){
-                    gyroZ.clear();
-                }
-                chartView.SetLineChartData(GyroscopeChart,
+                chartView.SetLineChartData(requireActivity(), GyroscopeChart,
                         gyroX, gyroY, gyroZ,
                         sensorEvent.values[0] * 180 / PI_FLOAT, sensorEvent.values[1] * 180 / PI_FLOAT, sensorEvent.values[2] * 180 / PI_FLOAT,
                         "AngX", "AngY", "AngZ",
@@ -629,17 +595,7 @@ public class SensorRecordFragment extends Fragment {
                 }));
 
                 //设置表中数据样式
-                //设置自动清零
-                if(rotX.size() > MAX_POINT_SIZE){
-                    rotX.clear();
-                }
-                if(rotY.size() > MAX_POINT_SIZE){
-                    rotY.clear();
-                }
-                if(rotZ.size() > MAX_POINT_SIZE){
-                    rotZ.clear();
-                }
-                chartView.SetLineChartData(RotationChart,
+                chartView.SetLineChartData(requireActivity(), RotationChart,
                         rotX, rotY, rotZ,
                         sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2],
                         "RotX", "RotY", "RotZ",
@@ -680,17 +636,7 @@ public class SensorRecordFragment extends Fragment {
                 }));
 
                 //设置表中数据样式
-                //设置自动清零
-                if(mrotX.size() > MAX_POINT_SIZE){
-                    mrotX.clear();
-                }
-                if(mrotY.size() > MAX_POINT_SIZE){
-                    mrotY.clear();
-                }
-                if(mrotZ.size() > MAX_POINT_SIZE){
-                    mrotZ.clear();
-                }
-                chartView.SetLineChartData(MagneticRotationChart,
+                chartView.SetLineChartData(requireActivity(), MagneticRotationChart,
                         mrotX, mrotY, mrotZ,
                         sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2],
                         "MRotX", "MRotY", "MRotZ",
@@ -731,17 +677,7 @@ public class SensorRecordFragment extends Fragment {
                 }));
 
                 //设置表中数据样式
-                //设置自动清零
-                if(magX.size() > MAX_POINT_SIZE){
-                    magX.clear();
-                }
-                if(magY.size() > MAX_POINT_SIZE){
-                    magY.clear();
-                }
-                if(magZ.size() > MAX_POINT_SIZE){
-                    magZ.clear();
-                }
-                chartView.SetLineChartData(MagneticChart,
+                chartView.SetLineChartData(requireActivity(), MagneticChart,
                         magX, magY, magZ,
                         sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2],
                         "MagX", "MagY", "MagZ",
@@ -777,11 +713,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(step.size() > MAX_POINT_SIZE){
-                    step.clear();
-                }
-                chartView.SetLineChartData(StepChart,
+                chartView.SetLineChartData(requireActivity(), StepChart,
                         step,
                         sensorEvent.values[0],
                         "Step",
@@ -817,11 +749,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(proximity.size() > MAX_POINT_SIZE){
-                    proximity.clear();
-                }
-                chartView.SetLineChartData(ProximityChart,
+                chartView.SetLineChartData(requireActivity(), ProximityChart,
                         proximity,
                         sensorEvent.values[0],
                         "Proximity",
@@ -857,11 +785,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(light.size() > MAX_POINT_SIZE){
-                    light.clear();
-                }
-                chartView.SetLineChartData(LightChart,
+                chartView.SetLineChartData(requireActivity(), LightChart,
                         light,
                         sensorEvent.values[0],
                         "Illuminance",
@@ -897,11 +821,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(temperature.size() > MAX_POINT_SIZE){
-                    temperature.clear();
-                }
-                chartView.SetLineChartData(TemperatureChart,
+                chartView.SetLineChartData(requireActivity(), TemperatureChart,
                         temperature,
                         sensorEvent.values[0],
                         "Temperature",
@@ -937,11 +857,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(pressure.size() > MAX_POINT_SIZE){
-                    pressure.clear();
-                }
-                chartView.SetLineChartData(PressureChart,
+                chartView.SetLineChartData(requireActivity(), PressureChart,
                         pressure,
                         sensorEvent.values[0],
                         "Pressure",
@@ -977,11 +893,7 @@ public class SensorRecordFragment extends Fragment {
                     }
                 }));
 
-                //设置表中数据样式
-                if(humidity.size() > MAX_POINT_SIZE){
-                    humidity.clear();
-                }
-                chartView.SetLineChartData(HumidityChart,
+                chartView.SetLineChartData(requireActivity(), HumidityChart,
                         humidity,
                         sensorEvent.values[0],
                         "Humidity",
@@ -996,6 +908,17 @@ public class SensorRecordFragment extends Fragment {
         };
 
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        StopEvent();
     }
 
     /**
@@ -1025,10 +948,9 @@ public class SensorRecordFragment extends Fragment {
             clearSensorData(sensorType);
         }
 
-
         //再销毁线程池
         if(!threadPool.isShutdown()){
-            threadPool.shutdown();
+            threadPool.shutdownNow();
         }
 
     }
