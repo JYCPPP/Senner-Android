@@ -182,16 +182,7 @@ public final class ObjectDetectionFragment extends Fragment  {
 
         recordButton.setOnClickListener(v -> {
 
-            // 获取系统的Vibrator服务
-            Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-
-            // 检查是否支持震动
-            if (vibrator.hasVibrator()) {
-
-                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE);
-                // 让手机震动
-                vibrator.vibrate(vibrationEffect);
-            }
+            Vibrate(80);
 
             if(!IsClickRecording){
                 //保证绘制完毕再清除
@@ -312,6 +303,19 @@ public final class ObjectDetectionFragment extends Fragment  {
         }
     }
 
+    private void Vibrate(int amplify) {
+        //触发震动事件
+        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        VibrationEffect effect = VibrationEffect.createOneShot(100, amplify);
+        // 检查设备是否支持 VibratorEffect 对象
+        if (vibrator.hasAmplitudeControl()) {
+            // 设备支持 VibratorEffect 对象
+            vibrator.vibrate(effect);
+        } else {
+            // 设备不支持 VibratorEffect 对象
+            vibrator.vibrate(100);
+        }
+    }
 
     @Override
     public void onDestroyView() {
