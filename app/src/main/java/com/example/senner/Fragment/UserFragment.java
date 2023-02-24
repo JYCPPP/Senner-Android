@@ -1,6 +1,7 @@
 package com.example.senner.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.senner.Activity.LoginActivity;
+import com.example.senner.Activity.MainActivity;
 import com.example.senner.Helper.DatabaseHandler;
 import com.example.senner.Helper.Functions;
 import com.example.senner.Helper.SharedPreferenceHelper;
@@ -68,17 +70,15 @@ public class UserFragment extends Fragment {
         //设置点击监听事件
         logout.setOnClickListener(v -> Logout());
         restart.setOnClickListener(v-> {
-            UserFragmentInterface userFragmentInterface = (UserFragmentInterface) requireActivity();
-            userFragmentInterface.Restart();
 
+            Intent intent = new Intent(requireActivity(), MainActivity.class);
+            startActivity(intent);
+
+            Activity activity = requireActivity();
+            activity.finish();
         });
-
-
     }
 
-    public interface UserFragmentInterface {
-        void Restart();
-    }
 
     private void Logout() {
         sharedPreferenceHelper.putBoolean(requireActivity(), "isloggedin", false);

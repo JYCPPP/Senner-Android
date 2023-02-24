@@ -58,7 +58,7 @@ import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import io.github.muddz.styleabletoast.StyleableToast;
 
-public class MainActivity extends AppCompatActivity implements UserFragment.UserFragmentInterface {
+public class MainActivity extends AppCompatActivity  {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements UserFragment.User
         SetStartButton();
         //设置输入状态的转换
         SetEditTextFoucus();
+        //设置进入动画
+        CloseViewPage();
 
     }
 
@@ -643,44 +645,4 @@ public class MainActivity extends AppCompatActivity implements UserFragment.User
         }
     }
 
-    @Override
-    public void Restart() {
-
-        //清除菜单栏记录的输入历史
-        Switch[] AllSwitch = new Switch[]{
-                UseLinearAcc, NeedLinearAccthresh,
-                UseAcc, NeedAccthresh,
-                UseGyro, NeedGyrothresh,
-                UseRot, NeedRotthresh,
-                UseMRot, NeedMRotthresh,
-                UseMag, NeedMagthresh,
-                UseProximity, NeedProximitythresh,
-                UseLight, NeedLightthresh,
-                UseTemp, NeedTempthresh,
-                UsePressure, NeedPressurethresh,
-                UseHumidity, NeedHumiditythresh,
-                UseStep, NeedStepthresh,
-                UseObjectDetection
-        };
-        for (Switch mSwitch : AllSwitch){
-            mSwitch.setChecked(false);
-        }
-        EditText[] editTexts = new EditText[]{
-                ProjectName,
-                LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ,
-                AccthreshX, AccthreshY, AccthreshZ,
-                GyrothreshX, GyrothreshY, GyrothreshZ,
-                RotthreshX, RotthreshY, RotthreshZ,
-                MRotthreshX, MRotthreshY, MRotthreshZ,
-                MagthreshX, MagthreshY, MagthreshZ,
-                Proximitythresh, Lightthresh, Tempthresh,
-                Pressurethresh, Humiditythresh, Stepthresh
-        };
-        for(EditText editText : editTexts){
-            editText.setText("");
-        }
-
-        //关闭主界面，打开菜单栏
-        CloseViewPage();
-    }
 }

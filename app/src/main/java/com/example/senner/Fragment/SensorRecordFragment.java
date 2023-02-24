@@ -911,13 +911,14 @@ public class SensorRecordFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void onDestroyView() {
+        super.onDestroyView();
+        StopEvent();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onStop() {
+        super.onStop();
         StopEvent();
     }
 
@@ -947,11 +948,8 @@ public class SensorRecordFragment extends Fragment {
         for(int sensorType : SensorTypes){
             clearSensorData(sensorType);
         }
+            threadPool.shutdown();
 
-        //再销毁线程池
-        if(!threadPool.isShutdown()){
-            threadPool.shutdownNow();
-        }
 
     }
 

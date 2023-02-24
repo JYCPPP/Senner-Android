@@ -8,9 +8,7 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
-        android:clickable="false"
-        android:focusable="false"
-        android:visibility="gone"
+        android:background="@color/APPbackground"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -24,9 +22,6 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            android:clickable="false"
-            android:focusable="false"
-            android:visibility="gone"
             app:tabIndicatorColor="@color/APPbackground"
             app:tabIndicatorGravity="bottom"
             app:tabIndicatorFullWidth="false"
@@ -39,6 +34,9 @@
     </eightbitlab.com.blurview.BlurView>
 
     <include
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
         layout="@layout/main_menu"/>
 
 </FrameLayout>
