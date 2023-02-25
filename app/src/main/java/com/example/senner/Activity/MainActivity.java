@@ -524,8 +524,7 @@ public class MainActivity extends AppCompatActivity  {
         UsePressure.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UsePressure, PressureNeedthreshMenu, NeedPressurethresh, PressureSetthreshMenu));
         UseHumidity.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseHumidity, HumidityNeedthreshMenu, NeedHumiditythresh, HumiditySetthreshMenu));
         UseStep.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseStep, StepNeedthreshMenu, NeedStepthresh, StepSetthreshMenu));
-        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        });
+        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> Vibrate(20));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)

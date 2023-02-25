@@ -182,7 +182,7 @@ public final class ObjectDetectionFragment extends Fragment  {
 
         recordButton.setOnClickListener(v -> {
 
-            Vibrate(80);
+            Vibrate(50);
 
             if(!IsClickRecording){
                 //保证绘制完毕再清除

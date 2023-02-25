@@ -7,8 +7,6 @@ import android.util.Log;
 import android.util.Size;
 import android.widget.Toast;
 
-import com.example.senner.Helper.Recognition;
-
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.CompatibilityList;
@@ -44,7 +42,7 @@ public class Yolov5TFLiteDetector {
     private final float IOU_THRESHOLD = 0.45f;
     private final float IOU_CLASS_DUPLICATED_THRESHOLD = 0.7f;
     //指定模型和标签文件
-    private final String MODEL_TARGET = "target-fp16.tflite";
+    private final String MODEL_TARGET = "target-5circles-fp16.tflite";
     private final String LABEL_TARGET = "target.txt";
     private final String MODEL_ROAD = "road-fp16.tflite";
     private final String LABEL_ROAD = "road.txt";
