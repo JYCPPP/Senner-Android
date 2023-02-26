@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,12 +19,10 @@ import androidx.camera.view.PreviewView;
 
 import com.github.mikephil.charting.data.Entry;
 
-import java.lang.ref.WeakReference;
+import org.opencv.core.Point;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -35,8 +32,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ImageAnalyse implements ImageAnalysis.Analyzer {
 
-//static int SCREEN_WIDTH = 1260;
-//static int SCREEN_HEIGHT = 2800;
+
+    private static final float THRESHOLD_CONFINDENCE = 0.65F;
 
     public static class Result{
 
@@ -53,7 +50,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     int rotation;
     private TextView inferenceTimeTextView;
     private TextView frameSizeTextView;
-    ImageProcess imageProcess;
+    FirstStageProcess firstStageProcess;
     private Yolov5TFLiteDetector yolov5TFLiteDetector;
     private Activity activity;
 
@@ -62,6 +59,9 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     private ArrayList<Entry> LocationY = new ArrayList<>(10000);
     public boolean IsRecording = false;
     public long record;
+    private float TARGETSIZE = 20;
+    private float histGray = 0.38F;
+    private boolean isDebug = false;
 
     public ImageAnalyse(Activity activity,
                         PreviewView previewView,
@@ -69,15 +69,21 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                         int rotation,
                         TextView inferenceTimeTextView,
                         TextView frameSizeTextView,
-                        Yolov5TFLiteDetector yolov5TFLiteDetector) {
+                        Yolov5TFLiteDetector yolov5TFLiteDetector,
+                        float histGray,
+                        float targetSize,
+                        boolean isDebug) {
         this.activity = activity;
         this.previewView = previewView;
         this.boxLabelCanvas = boxLabelCanvas;
         this.rotation = rotation;
         this.inferenceTimeTextView = inferenceTimeTextView;
         this.frameSizeTextView = frameSizeTextView;
-        this.imageProcess = new ImageProcess();
+        this.firstStageProcess = new FirstStageProcess();
         this.yolov5TFLiteDetector = yolov5TFLiteDetector;
+        this.histGray = histGray;
+        this.TARGETSIZE = targetSize;
+        this.isDebug = isDebug;
     }
 
 
@@ -86,9 +92,6 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     public void analyze(@NonNull ImageProxy image) {
         int previewHeight = previewView.getHeight();
         int previewWidth = previewView.getWidth();
-
-        //计算出屏幕毫米：像素
-        float[] ScreenRatio = CaculateScale(activity, previewWidth, previewHeight);
         
         // 这里Observable将image analyse的逻辑放到子线程计算, 渲染UI的时候再拿回来对应的数据, 避免前端UI卡顿
         Observable.create( (ObservableEmitter<Result> emitter) -> {
@@ -100,13 +103,13 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                     int imageHeight = image.getHeight();
                     int imagewWidth = image.getWidth();
 
-                    imageProcess.fillBytes(planes, yuvBytes);
+                    firstStageProcess.fillBytes(planes, yuvBytes);
                     int yRowStride = planes[0].getRowStride();
                     final int uvRowStride = planes[1].getRowStride();
                     final int uvPixelStride = planes[1].getPixelStride();
 
                     int[] rgbBytes = new int[imageHeight * imagewWidth];
-                    imageProcess.YUV420ToARGB8888(
+                    firstStageProcess.YUV420ToARGB8888(
                             yuvBytes[0],
                             yuvBytes[1],
                             yuvBytes[2],
@@ -126,7 +129,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                             previewHeight / (double) (rotation % 180 == 0 ? imagewWidth : imageHeight),
                             previewWidth / (double) (rotation % 180 == 0 ? imageHeight : imagewWidth)
                     );
-                    Matrix fullScreenTransform = imageProcess.getTransformationMatrix(
+                    Matrix fullScreenTransform = firstStageProcess.getTransformationMatrix(
                             imagewWidth, imageHeight,
                             (int) (scale * imageHeight), (int) (scale * imagewWidth),
                             rotation % 180 == 0 ? 90 : 0, false
@@ -142,19 +145,20 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
 
                     // 模型输入的bitmap
                     Matrix previewToModelTransform =
-                            imageProcess.getTransformationMatrix(
+                            firstStageProcess.getTransformationMatrix(
                                     cropImageBitmap.getWidth(), cropImageBitmap.getHeight(),
                                     yolov5TFLiteDetector.getInputSize().getWidth(),
                                     yolov5TFLiteDetector.getInputSize().getHeight(),
                                     0, false);
-                    Bitmap modelInputBitmap = Bitmap.createBitmap(cropImageBitmap, 0, 0,
+                    Bitmap firstStageBitmap = Bitmap.createBitmap(cropImageBitmap, 0, 0,
                             cropImageBitmap.getWidth(), cropImageBitmap.getHeight(),
                             previewToModelTransform, false);
 
                     Matrix modelToPreviewTransform = new Matrix();
                     previewToModelTransform.invert(modelToPreviewTransform);
 
-                    ArrayList<Recognition> recognitions = yolov5TFLiteDetector.detect(modelInputBitmap);
+                    // 这里进行第一阶段的处理
+                    ArrayList<Recognition> recognitions = yolov5TFLiteDetector.detect(firstStageBitmap);
 
                     Bitmap emptyCropSizeBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
                     Canvas cropCanvas = new Canvas(emptyCropSizeBitmap);
@@ -168,27 +172,49 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                     textPain.setTextSize(50);
                     textPain.setColor(Color.RED);
                     textPain.setStyle(Paint.Style.FILL);
+                    // bitmap画笔
+                    Paint bitmapPaint = new Paint();
 
                     for (Recognition res : recognitions) {
 
-                        RectF location = res.getLocation();
-
-                        if(IsRecording){
-                            LocationX.add(new Entry((float) (start - record), location.centerX() * ScreenRatio[0]));
-                            LocationY.add(new Entry((float) (start - record), location.centerY() * ScreenRatio[1]));
-                        }
+                        RectF ROI = res.getLocation();
+                        // 这里进行第一阶段的处理
                         String label = res.getLabelName();
                         float confidence = res.getConfidence();
-                        modelToPreviewTransform.mapRect(location);
-                        cropCanvas.drawRect(location, boxPaint);
-                        cropCanvas.drawText(label + ":" + String.format("%.2f", confidence), location.left, location.top, textPain);
+                        modelToPreviewTransform.mapRect(ROI);
+                        cropCanvas.drawRect(ROI, boxPaint);
+                        cropCanvas.drawText(label + ":" + String.format("%.2f", confidence), ROI.left, ROI.top, textPain);
+
+                        if(confidence > THRESHOLD_CONFINDENCE){
+                            // 在这里进行第二阶段的处理
+                            // 角点的存储数据为左上、右上、左下、右下
+                            List<Point> cornerPoints = new ArrayList<>();
+                            cornerPoints.add(0, new Point(0, 0));
+                            cornerPoints.add(1, new Point(ROI.width(), 0));
+                            cornerPoints.add(2, new Point(0, ROI.height()));
+                            cornerPoints.add(3, new Point(ROI.width(), ROI.height()));
+
+                            // bitmap转化成Mat对象
+                            // 使用一开始的bitmap， 因为模型输入的尺寸经过缩放
+                            Bitmap secondStageBitmap = Bitmap.createBitmap(cropImageBitmap, (int)ROI.left, (int)ROI.top, (int)ROI.width(), (int)ROI.height());
+                            // 提取ROI中的图像
+                            SecondStageProcess secondStageProcess = new SecondStageProcess(histGray, TARGETSIZE, isDebug);
+                            SecondStageProcess.SecondStageResult s = secondStageProcess.Process(secondStageBitmap, cornerPoints);
+
+                            if(IsRecording){
+                                LocationX.add(new Entry((float) (start - record), (float) (s.centerPoint.x * s.Ratio.width)));
+                                LocationY.add(new Entry((float) (start - record), (float) (s.centerPoint.y * s.Ratio.height)));
+                            }
+
+                            cropCanvas.drawBitmap(s.ProcessedImage, ROI.left, ROI.top, bitmapPaint);
+                        }
                     }
                     long end = System.currentTimeMillis();
                     long costTime = (end - start);
                     image.close();
                     emitter.onNext(new Result(costTime, emptyCropSizeBitmap));
-                }).subscribeOn(Schedulers.io()) // 这里定义被观察者,也就是上面代码的线程, 如果没定义就是主线程同步, 非异步
-                // 这里就是回到主线程, 观察者接受到emitter发送的数据进行处理
+                }).subscribeOn(Schedulers.io()) //这里定义被观察者,也就是上面代码的线程, 如果没定义就是主线程同步, 非异步
+                //这里就是回到主线程, 观察者接受到emitter发送的数据进行处理
                 .observeOn(AndroidSchedulers.mainThread())
                 // 这里就是回到主线程处理子线程的回调数据.
                 .subscribe((Result result) -> {
@@ -208,27 +234,33 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
             LocationY.clear();
 
     }
-
-
-    private float[] CaculateScale(Activity activity, int previewWidth, int previewHeight) {
-
-        //计算屏幕像素与物理尺寸的比例
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        // 获取屏幕的物理尺寸，单位是英寸
-        float widthInInches = displayMetrics.widthPixels / displayMetrics.xdpi;
-        float heightInInches = displayMetrics.heightPixels / displayMetrics.ydpi;
-
-        float heightInMm = heightInInches * 25.4f; // 英寸转毫米
-        float widthInMm = widthInInches * 25.4f;
-        Log.e("Screen Size", Arrays.toString(new float[]{widthInMm, heightInMm}));
-
-        float scaleX = widthInMm / previewWidth;
-        float scaleY = heightInMm / previewHeight;
-        
-        return new float[]{scaleX, scaleY};
-        
+    public void SetHistGray(float histGray){
+        this.histGray = histGray;
     }
+    public void SetIsDebug(boolean isDebug){
+        this.isDebug = isDebug;
+    }
+
+
+//    private float[] CaculateScale(Activity activity, int previewWidth, int previewHeight) {
+//
+//        //计算屏幕像素与物理尺寸的比例
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//
+//        // 获取屏幕的物理尺寸，单位是英寸
+//        float widthInInches = displayMetrics.widthPixels / displayMetrics.xdpi;
+//        float heightInInches = displayMetrics.heightPixels / displayMetrics.ydpi;
+//
+//        float heightInMm = heightInInches * 25.4f; // 英寸转毫米
+//        float widthInMm = widthInInches * 25.4f;
+//        Log.e("Screen Size", Arrays.toString(new float[]{widthInMm, heightInMm}));
+//
+//        float scaleX = widthInMm / previewWidth;
+//        float scaleY = heightInMm / previewHeight;
+//
+//        return new float[]{scaleX, scaleY};
+//
+//    }
 
 }

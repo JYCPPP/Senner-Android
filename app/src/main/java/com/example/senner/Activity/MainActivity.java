@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity  {
                     UsePressure, NeedPressurethresh,
                     UseHumidity, NeedHumiditythresh,
                     UseStep, NeedStepthresh,
-                    UseObjectDetection;
+                    UseObjectDetection, isObjectDetectionDebugMode;
 
     private EditText LinearAccthreshX, LinearAccthreshY, LinearAccthreshZ,
                     AccthreshX, AccthreshY, AccthreshZ,
@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity  {
                     MRotthreshX, MRotthreshY, MRotthreshZ,
                     MagthreshX, MagthreshY, MagthreshZ,
                     Proximitythresh, Lightthresh, Tempthresh,
-                    Pressurethresh, Humiditythresh, Stepthresh;
+                    Pressurethresh, Humiditythresh, Stepthresh,
+                    HistGray, TargetSize;
 
 
     private Button StartButton;
@@ -106,7 +107,8 @@ public class MainActivity extends AppCompatActivity  {
                         PressureNeedthreshMenu, PressureSetthreshMenu,
                         TempNeedthreshMenu, TempSetthreshMenu,
                         StepNeedthreshMenu, StepSetthreshMenu,
-                        HumidityNeedthreshMenu, HumiditySetthreshMenu;
+                        HumidityNeedthreshMenu, HumiditySetthreshMenu,
+                        ObjectDetectionOptionMenu;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -142,7 +144,8 @@ public class MainActivity extends AppCompatActivity  {
                 MRotthreshX, MRotthreshY, MRotthreshZ,
                 MagthreshX, MagthreshY, MagthreshZ,
                 Proximitythresh, Lightthresh, Tempthresh,
-                Pressurethresh, Humiditythresh, Stepthresh);
+                Pressurethresh, Humiditythresh, Stepthresh,
+                HistGray, TargetSize);
 
         for(EditText editText : editTexts){
 
@@ -206,6 +209,7 @@ public class MainActivity extends AppCompatActivity  {
                 CheckSensorOptionState(UsePressure, NeedPressurethresh, Pressurethresh, "Pressure Sensor", "hPa");
                 CheckSensorOptionState(UseStep, NeedStepthresh, Stepthresh, "Step Counter", "steps");
 
+                CheckObjectDetectionOptionState(UseObjectDetection, isObjectDetectionDebugMode, HistGray, TargetSize, "Object Detection");
                 //下面进行两件事情
                 //一是点击开始按钮加载主界面，主界面的内容与自定义的需求有关
                 //确保至少选择一个项目
@@ -261,6 +265,45 @@ public class MainActivity extends AppCompatActivity  {
             }
 
         });
+    }
+
+    private void CheckObjectDetectionOptionState(Switch useObjectDetection, Switch isObjectDetectionDebugMode, EditText histGray, EditText targetSize, String object_detectionName) {
+
+        if(useObjectDetection.isChecked()&& !histGray.getText().toString().isEmpty() && !targetSize.getText().toString().isEmpty()){
+
+            ProjectInfo += "Use "+ object_detectionName + " : " + "true" + "\n" + "Hist Gray: " + histGray.getText().toString() + "\n" + "Target Size: " + targetSize.getText().toString() + "\n";
+        }
+        else if(!useObjectDetection.isChecked()){
+
+            ProjectInfo += "Use "+ object_detectionName + " : "  + "false" + "\n";
+        }
+        else if(useObjectDetection.isChecked() && (histGray.getText().toString().isEmpty() || targetSize.getText().toString().isEmpty())){
+            if(histGray.getText().toString().isEmpty()){
+                histGray.setText("0.38");
+                histGray.setBackground(getDrawable(R.drawable.bg_red));
+            }
+            if(targetSize.getText().toString().isEmpty()){
+                targetSize.setText("20");
+                targetSize.setBackground(getDrawable(R.drawable.bg_red));
+            }
+            ProjectInfo += "Use "+ object_detectionName + " : " + "true" + "\n" + "Hist Gray: " + histGray.getText().toString() + "\n" + "Target Size: " + targetSize.getText().toString() + "\n";
+        }
+
+        if(useObjectDetection.isChecked()){
+            UseSensor = true;
+            sharedPreferenceHelper.putBoolean(this, "Use " + object_detectionName , true);
+            sharedPreferenceHelper.putFloat(this, "Gray Ratio", Float.parseFloat(histGray.getText().toString()));
+            sharedPreferenceHelper.putFloat(this, "Target Size", Float.parseFloat(targetSize.getText().toString()));
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "Use " + object_detectionName , false);
+        }
+
+        if(isObjectDetectionDebugMode.isChecked()){
+            sharedPreferenceHelper.putBoolean(this, "isObjectDetectionDebugMode", true);
+        }else{
+            sharedPreferenceHelper.putBoolean(this, "isObjectDetectionDebugMode", false);
+        }
+
     }
 
     private void OpenViewPage() {
@@ -444,6 +487,8 @@ public class MainActivity extends AppCompatActivity  {
         HumidityNeedthreshMenu = findViewById(R.id.option_humidity_need_thresh);
         HumiditySetthreshMenu = findViewById(R.id.option_humidity_thresh);
 
+        ObjectDetectionOptionMenu = findViewById(R.id.option_object_detection);
+
 
         //绑定CheckBox
         ProjectName = findViewById(R.id.et_projectName);
@@ -474,6 +519,7 @@ public class MainActivity extends AppCompatActivity  {
         NeedStepthresh = findViewById(R.id.cb_step_need_thresh);
 
         UseObjectDetection = findViewById(R.id.cb_object_detection);
+        isObjectDetectionDebugMode = findViewById(R.id.cb_object_detection_isDebug);
 
         //绑定EditBox
         LinearAccthreshX = findViewById(R.id.et_linearacc_threshX);
@@ -501,6 +547,9 @@ public class MainActivity extends AppCompatActivity  {
         Humiditythresh = findViewById(R.id.et_humidity_thresh);
         Stepthresh = findViewById(R.id.et_step_thresh);
 
+        HistGray = findViewById(R.id.et_hist_gray);
+        TargetSize = findViewById(R.id.et_target_size);
+
         //绑定按钮
         StartButton = findViewById(R.id.btn_start);
         //设置高斯模糊
@@ -524,7 +573,26 @@ public class MainActivity extends AppCompatActivity  {
         UsePressure.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UsePressure, PressureNeedthreshMenu, NeedPressurethresh, PressureSetthreshMenu));
         UseHumidity.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseHumidity, HumidityNeedthreshMenu, NeedHumiditythresh, HumiditySetthreshMenu));
         UseStep.setOnCheckedChangeListener((v, isChecked) -> SetNeedthreshMenuVisibility(UseStep, StepNeedthreshMenu, NeedStepthresh, StepSetthreshMenu));
-        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> Vibrate(20));
+
+        UseObjectDetection.setOnCheckedChangeListener((buttonView, isChecked) -> SetObjectDetectionMenuVisibility(UseObjectDetection, ObjectDetectionOptionMenu, isObjectDetectionDebugMode));
+    }
+
+    private void SetObjectDetectionMenuVisibility(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useObjectDetection, LinearLayout objectDetectionOptionMenu, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch isDebugMode) {
+        Vibrate(20);
+        if(useObjectDetection.isChecked()) {
+            objectDetectionOptionMenu.setVisibility(View.VISIBLE);
+            isDebugMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Vibrate(20);
+                if(isDebugMode.isChecked()){
+                    sharedPreferenceHelper.putBoolean(this, "isObjectDetectionDebugMode", true);
+                }else{
+                    sharedPreferenceHelper.putBoolean(this, "isObjectDetectionDebugMode", false);
+                }
+            });
+        }else{
+            isDebugMode.setChecked(false);
+            objectDetectionOptionMenu.setVisibility(View.GONE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)

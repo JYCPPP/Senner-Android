@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.senner.Helper.CameraProcess;
 import com.example.senner.Helper.ImageAnalyse;
+import com.example.senner.Helper.SharedPreferenceHelper;
 import com.example.senner.Helper.Yolov5TFLiteDetector;
 import com.example.senner.R;
 import com.example.senner.UI.ChartView;
@@ -68,7 +69,11 @@ public final class ObjectDetectionFragment extends Fragment  {
     private LineChart disChart;
     private final ChartView chartView = new ChartView();
 
-
+    // 参数相关
+    private SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
+    private boolean isDebugMode;
+    private float histGray;
+    private float targetSize;
 
 
     @Override
@@ -102,12 +107,15 @@ public final class ObjectDetectionFragment extends Fragment  {
 
         // 获取手机摄像头拍照旋转参数
         rotation = requireActivity().getWindowManager().getDefaultDisplay().getRotation();
-        Log.i("image", "rotation: " + rotation);
 
         cameraProcess.showCameraSupportSize(requireActivity());
 
         // 初始化加载yolov5s
         initModel("target");
+
+        isDebugMode = sharedPreferenceHelper.getBoolean(requireActivity(), "isObjectDetectionDebugMode", true);
+        histGray = sharedPreferenceHelper.getFloat(requireActivity(), "Gray Ratio", 0.38F);
+        targetSize = sharedPreferenceHelper.getFloat(requireActivity(), "Target Size", 20F);
 
         // 监听模型切换按钮
         modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -121,7 +129,10 @@ public final class ObjectDetectionFragment extends Fragment  {
                             rotation,
                             inferenceTimeTextView,
                             frameSizeTextView,
-                            yolov5TFLiteDetector);
+                            yolov5TFLiteDetector,
+                            histGray,
+                            targetSize,
+                            isDebugMode);
                     cameraProcess.startCamera(requireActivity(), imageAnalyse, cameraPreviewMatch);
                 }
 
@@ -291,7 +302,10 @@ public final class ObjectDetectionFragment extends Fragment  {
                     rotation,
                     inferenceTimeTextView,
                     frameSizeTextView,
-                    yolov5TFLiteDetector);
+                    yolov5TFLiteDetector,
+                    histGray,
+                    targetSize,
+                    isDebugMode);
 
             if (isVisible() && imageAnalyse != null && cameraPreviewMatch != null) {
                 cameraProcess.startCamera(requireActivity(), imageAnalyse, cameraPreviewMatch);

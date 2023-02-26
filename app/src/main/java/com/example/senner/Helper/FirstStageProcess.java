@@ -16,7 +16,7 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.nio.ByteBuffer;
 
 
-public class ImageProcess {
+public class FirstStageProcess {
 
     private int kMaxChannelValue = 262143;
 
