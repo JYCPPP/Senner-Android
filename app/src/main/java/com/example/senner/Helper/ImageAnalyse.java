@@ -52,7 +52,6 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     private TextView frameSizeTextView;
     FirstStageProcess firstStageProcess;
     private Yolov5TFLiteDetector yolov5TFLiteDetector;
-    private Activity activity;
 
     //在保证性能的前提下，应分配初始容量
     private ArrayList<Entry> LocationX = new ArrayList<>(10000);
@@ -63,8 +62,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     private float histGray = 0.38F;
     private boolean isDebug = false;
 
-    public ImageAnalyse(Activity activity,
-                        PreviewView previewView,
+    public ImageAnalyse(PreviewView previewView,
                         ImageView boxLabelCanvas,
                         int rotation,
                         TextView inferenceTimeTextView,
@@ -73,7 +71,6 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                         float histGray,
                         float targetSize,
                         boolean isDebug) {
-        this.activity = activity;
         this.previewView = previewView;
         this.boxLabelCanvas = boxLabelCanvas;
         this.rotation = rotation;
@@ -233,12 +230,6 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
             LocationX.clear();
             LocationY.clear();
 
-    }
-    public void SetHistGray(float histGray){
-        this.histGray = histGray;
-    }
-    public void SetIsDebug(boolean isDebug){
-        this.isDebug = isDebug;
     }
 
 

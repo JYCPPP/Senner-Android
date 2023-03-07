@@ -123,7 +123,7 @@ public final class ObjectDetectionFragment extends Fragment  {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String model = (String) adapterView.getItemAtPosition(i);
                 initModel(model);
-                    imageAnalyse = new ImageAnalyse(requireActivity(),
+                    imageAnalyse = new ImageAnalyse(
                             cameraPreviewMatch,
                             boxLabelCanvas,
                             rotation,
@@ -296,7 +296,7 @@ public final class ObjectDetectionFragment extends Fragment  {
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
-            imageAnalyse = new ImageAnalyse(requireActivity(),
+            imageAnalyse = new ImageAnalyse(
                     cameraPreviewMatch,
                     boxLabelCanvas,
                     rotation,

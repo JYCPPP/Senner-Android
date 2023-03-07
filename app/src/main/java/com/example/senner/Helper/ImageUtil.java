@@ -1,9 +1,6 @@
 package com.example.senner.Helper;
 
-import android.app.Activity;
 import android.media.Image;
-
-import com.example.senner.R;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -12,8 +9,6 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import java.nio.ByteBuffer;
-
-import io.github.muddz.styleabletoast.StyleableToast;
 
 public class ImageUtil {
     public ImageUtil(Image image) {
