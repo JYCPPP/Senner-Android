@@ -109,6 +109,7 @@
     <color name="saddlebrown">#8b4513</color><!--重褐色 -->
     <color name="darkmagenta">#8b008b</color><!--暗洋红 -->
     <color name="darkred">#8b0000</color><!--暗红色 -->
+    <color name="AlphaRed">#CDEC0202</color><!--暗红色 -->
     <color name="blueviolet">#8a2be2</color><!--紫罗兰蓝色 -->
     <color name="lightskyblue">#87cefa</color><!--亮天蓝色 -->
     <color name="skyblue">#87ceeb</color><!--天蓝色 -->

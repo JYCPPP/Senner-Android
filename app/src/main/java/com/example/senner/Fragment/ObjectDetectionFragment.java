@@ -40,8 +40,13 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public final class ObjectDetectionFragment extends Fragment  {
 
@@ -54,13 +59,6 @@ public final class ObjectDetectionFragment extends Fragment  {
     private int rotation;
 
     private final CameraProcess cameraProcess = new CameraProcess();
-
-    //Menu
-    private float posY, curPosY;
-    private boolean isSheetOpen = false;
-    private Animation animation;
-    private FrameLayout menu;
-    private ImageView arrow;
 
     //位移相关
     private FrameLayout camera;
@@ -88,10 +86,7 @@ public final class ObjectDetectionFragment extends Fragment  {
     private void Init(View view) {
 
 
-        //设置
-        menu = view.findViewById(R.id.menu);
-        arrow = view.findViewById(R.id.arrow);
-        // 全屏画面
+        // 全图画面
         cameraPreviewMatch = view.findViewById(R.id.camera_preview_match);
         cameraPreviewMatch.setScaleType(PreviewView.ScaleType.FILL_START);
 
@@ -147,11 +142,11 @@ public final class ObjectDetectionFragment extends Fragment  {
         //初始化折线图，设置图例
         disChart = view.findViewById(R.id.disChart);
         LegendEntry legendEntry_locX = new LegendEntry("LocationX(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.RED);
-        LegendEntry legendEntry_locY = new LegendEntry("LocationY(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.BLUE);
+        LegendEntry legendEntry_locY = new LegendEntry("LocationY(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.GREEN);
         List<LegendEntry> entries_location = new ArrayList<>();
         entries_location.add(legendEntry_locX);
         entries_location.add(legendEntry_locY);
-        chartView.InitChartView(disChart, 5, 0, entries_location);
+        chartView.InitWhiteChartView(disChart, 5, 0, entries_location);
 
     }
 
@@ -178,8 +173,6 @@ public final class ObjectDetectionFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Bind menu
-        setMenuView();
         //Bind record
         SetRecordEvent();
 
@@ -201,8 +194,15 @@ public final class ObjectDetectionFragment extends Fragment  {
                 IsClickRecording = true;
                 recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_stop_36dp));
                 imageAnalyse.record = System.currentTimeMillis();
+                // 先创建文件
+                String ProjectPath = sharedPreferenceHelper.getString(requireActivity(),"Project Path", "");
+                //时间
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT+8")); // 将时区设置为东八区
+                Date currentDate = new Date();
+                String currentTime = sdf.format(currentDate.getTime());
+                imageAnalyse.DisData = CreateDataFile(ProjectPath + "/ObjectDetection Data", "/" + currentTime +" " + "Displacement.txt");
                 imageAnalyse.IsRecording = true;
-
             }else {
                 IsClickRecording = false;
                 recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_record_36dp));
@@ -217,75 +217,74 @@ public final class ObjectDetectionFragment extends Fragment  {
      *依次实现以下功能：拿到imageAnalyse记录的框位移数据、将数据赋给表格、清除所有历史数据
      */
     private void ShowDisLineChart() {
-
-        chartView.SetDisplacementChartData(requireActivity(), disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.BLUE, true);
+        chartView.SetDisplacementChartData(requireActivity(), disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.GREEN, true);
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void setMenuView() {
-        //主线程执行避免阻塞
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> camera.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    posY = event.getRawY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    curPosY = event.getRawY();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if ((curPosY - posY > 0) && (Math.abs(curPosY - posY) > 25)) {
-                        if (!isSheetOpen) {
-                            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_down);
-                            //设置背景隐藏
-                            camera.setClickable(false);
-                            camera.setFocusable(false);
-                            camera.setVisibility(View.INVISIBLE);
-                            //设置菜单可视
-                            menu.setVisibility(View.VISIBLE);
-                            menu.startAnimation(animation);
-                            menu.setFocusable(true);
-                            menu.setClickable(true);
-                            isSheetOpen = true;
-                            arrow.setImageResource(R.drawable.round_arrow_up_48dp);
-
-                            menu.setOnTouchListener((sheet, slide) -> {
-                                switch (slide.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        posY = slide.getRawY();
-                                        break;
-                                    case MotionEvent.ACTION_MOVE:
-                                        curPosY = slide.getRawY();
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        if ((curPosY - posY < 0) && (Math.abs(curPosY - posY) > 25)) {
-                                            if (isSheetOpen) {
-                                                animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_up);
-                                                //设置背景显示
-                                                camera.setClickable(true);
-                                                camera.setFocusable(true);
-                                                camera.setVisibility(View.VISIBLE);
-                                                //设置菜单隐藏
-                                                menu.startAnimation(animation);
-                                                menu.setVisibility(View.INVISIBLE);
-                                                menu.setClickable(false);
-                                                menu.setFocusable(false);
-                                                arrow.setImageResource(R.drawable.round_arrow_down_48dp);
-                                                isSheetOpen = false;
-                                            }
-                                        }
-                                        break;
-                                }
-                                return true;
-                            });
-                        }
-                    }
-                    break;
-            }
-            return true;
-        }));
-    }
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void setMenuView() {
+//        //主线程执行避免阻塞
+//        Handler handler = new Handler(Looper.getMainLooper());
+//        handler.post(() -> camera.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    posY = event.getRawY();
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    curPosY = event.getRawY();
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//                    if ((curPosY - posY > 0) && (Math.abs(curPosY - posY) > 25)) {
+//                        if (!isSheetOpen) {
+//                            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_down);
+//                            //设置背景隐藏
+//                            camera.setClickable(false);
+//                            camera.setFocusable(false);
+//                            camera.setVisibility(View.INVISIBLE);
+//                            //设置菜单可视
+//                            menu.setVisibility(View.VISIBLE);
+//                            menu.startAnimation(animation);
+//                            menu.setFocusable(true);
+//                            menu.setClickable(true);
+//                            isSheetOpen = true;
+//                            arrow.setImageResource(R.drawable.round_arrow_up_48dp);
+//
+//                            menu.setOnTouchListener((sheet, slide) -> {
+//                                switch (slide.getAction()) {
+//                                    case MotionEvent.ACTION_DOWN:
+//                                        posY = slide.getRawY();
+//                                        break;
+//                                    case MotionEvent.ACTION_MOVE:
+//                                        curPosY = slide.getRawY();
+//                                        break;
+//                                    case MotionEvent.ACTION_UP:
+//                                        if ((curPosY - posY < 0) && (Math.abs(curPosY - posY) > 25)) {
+//                                            if (isSheetOpen) {
+//                                                animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_up);
+//                                                //设置背景显示
+//                                                camera.setClickable(true);
+//                                                camera.setFocusable(true);
+//                                                camera.setVisibility(View.VISIBLE);
+//                                                //设置菜单隐藏
+//                                                menu.startAnimation(animation);
+//                                                menu.setVisibility(View.INVISIBLE);
+//                                                menu.setClickable(false);
+//                                                menu.setFocusable(false);
+//                                                arrow.setImageResource(R.drawable.round_arrow_down_48dp);
+//                                                isSheetOpen = false;
+//                                            }
+//                                        }
+//                                        break;
+//                                }
+//                                return true;
+//                            });
+//                        }
+//                    }
+//                    break;
+//            }
+//            return true;
+//        }));
+//    }
 
 
     //Switch back will do this:
@@ -309,7 +308,6 @@ public final class ObjectDetectionFragment extends Fragment  {
 
             if (isVisible() && imageAnalyse != null && cameraPreviewMatch != null) {
                 cameraProcess.startCamera(requireActivity(), imageAnalyse, cameraPreviewMatch);
-                setMenuView();
             }
         } else {
             // Permission is not granted, request it
@@ -356,5 +354,21 @@ public final class ObjectDetectionFragment extends Fragment  {
         super.onStop();
 
     }
+    private File CreateDataFile(String filePath, String fileName) {
 
+        File path = new File(filePath);
+        if(!path.exists()){
+            path.mkdirs();
+        }
+        //打开文件，如果不存在则创建
+        File file = new File(filePath + fileName);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
 }

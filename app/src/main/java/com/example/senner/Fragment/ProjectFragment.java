@@ -53,10 +53,15 @@ public class ProjectFragment extends Fragment {
         mAdapter = new FileListAdapter(requireActivity(), mFiles);
         mFileRecyclerView.setAdapter(mAdapter);
 
-        // 在onCreate()方法中启动任务
-        new ScanFilesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        new ScanFilesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @SuppressLint("StaticFieldLeak")

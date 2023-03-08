@@ -140,6 +140,113 @@ public class ChartView {
 
     }
 
+    public void InitWhiteChartView(LineChart lineChart, float MaxValue, float MinValue,  List<LegendEntry> legendEntries){
+
+        //设置表样式
+        //绘制区域边框、设置边框颜色、边框宽度
+        lineChart.setDrawBorders(true);
+        lineChart.setBorderColor(Color.WHITE);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.setBorderWidth(2);
+
+        //滑动触摸相关
+        lineChart.setTouchEnabled(true); // 所有触摸事件,默认true
+        lineChart.setDragEnabled(true);    // 可拖动,默认true
+        lineChart.setScaleEnabled(true);   // 两个轴上的缩放,X,Y分别默认为true
+        lineChart.setScaleXEnabled(true);  // X轴上的缩放,默认true
+        lineChart.setScaleYEnabled(true);  // Y轴上的缩放,默认true
+        lineChart.setPinchZoom(true);  // X,Y轴同时缩放，false则X,Y轴单独缩放,默认false
+        lineChart.setDoubleTapToZoomEnabled(true); // 双击缩放,默认true
+        lineChart.setDragDecelerationEnabled(true);    // 抬起手指，继续滑动,默认true
+        lineChart.setDragDecelerationFrictionCoef(0.9f);   // 摩擦系数,[0-1]，较大值速度会缓慢下降，0，立即停止;1,无效值，并转换为0.9999.默认0.9f.
+        lineChart.setOnChartGestureListener (new OnChartGestureListener() { // 手势监听器
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                // 按下
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                // 抬起,取消
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+                // 长按
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+                // 双击
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+                // 单击
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+                // 甩动
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                // 缩放
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+                // 移动
+            }
+        });
+
+        //轴相关
+        // 由四个元素组成：
+        // 标签：即刻度值。也可以自定义，比如时间，距离等等，下面会说一下；
+        // 轴线：坐标轴；
+        // 网格线：垂直于轴线对应每个值画的轴线；
+        // 限制线：最值等线。
+        XAxis xAxis = lineChart.getXAxis();    // 获取X轴
+        xAxis.setAxisLineColor(Color.WHITE); // 坐标轴颜色，默认GRAY
+        xAxis.setTextColor(Color.WHITE); //刻度文字颜色
+        xAxis.setGridColor(Color.WHITE);   // 网格线颜色，默认GRAY
+        xAxis.setTextSize(12f);
+        xAxis.setGridLineWidth(1); // 网格线宽度，dp，默认1dp
+        xAxis.setAxisLineWidth(2);
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
+        xAxis.enableGridDashedLine(20, 10, 1);
+
+        YAxis yAxis = lineChart.getAxisLeft(); // 获取Y轴,mLineChart.getAxis(YAxis.AxisDependency.LEFT);也可以获取Y轴
+        yAxis.setTextColor(Color.WHITE);  // 标签字体颜色
+        yAxis.setTextSize(12f);    // 标签字体大小，dp，6-24之间，默认为10dp
+        yAxis.setGridColor(Color.WHITE);    // 网格线颜色，默认GRAY
+        yAxis.setGridLineWidth(1f);    // 网格线宽度，dp，默认1dp
+        yAxis.setAxisLineColor(Color.WHITE);  // 坐标轴颜色，默认GRAY.测试到一个bug，假如左侧线只有1dp，
+        yAxis.setAxisLineWidth(2f);  // 坐标轴线宽度，dp，默认1dp
+        yAxis.setAxisMaximum(MaxValue);
+        yAxis.setAxisMinimum(MinValue);
+        yAxis.enableGridDashedLine(20, 10, 1);    // 网格线为虚线，lineLength，每段实线长度,spaceLength,虚线间隔长度，phase，起始点（进过测试，最后这个参数也没看出来干啥的）
+
+        //图例相关
+        Legend legend = lineChart.getLegend(); // 获取图例，但是在数据设置给chart之前是不可获取的
+        legend.setEnabled(true);    // 是否绘制图例
+        legend.setTextColor(Color.WHITE);    // 图例标签字体颜色，默认BLACK
+        legend.setTextSize(10); // 图例标签字体大小[6,24]dp,默认10dp
+        legend.setTypeface(null);   // 图例标签字体
+        legend.setWordWrapEnabled(false);    // 当图例超出时是否换行适配，这个配置会降低性能，且只有图例在底部时才可以适配。默认false
+        legend.setMaxSizePercent(1f); // 设置，默认0.95f,图例最大尺寸区域占图表区域之外的比例
+        legend.setForm(Legend.LegendForm.SQUARE);   // 设置图例的形状，SQUARE, CIRCLE 或者 LINE
+        legend.setXEntrySpace(6);  // 设置水平图例间间距，默认6dp
+        legend.setYEntrySpace(0);  // 设置垂直图例间间距，默认0
+        legend.setDrawInside(true);
+        legend.setFormToTextSpace(5);    // 设置图例的标签与图形之间的距离，默认5dp
+        legend.setCustom(legendEntries);
+
+        lineChart.invalidate();
+
+
+    }
     public void SetThreshold(LineChart lineChart, float threshold){
 
         YAxis yAxis = lineChart.getAxisLeft();
@@ -299,7 +406,6 @@ public class ChartView {
                                  boolean isShowValueText)
     {
 
-        // 在另一个线程中修改数据
         activity.runOnUiThread(() -> {
 
             LineData lineData = chart.getData();
@@ -405,7 +511,6 @@ public class ChartView {
                     y.setAxisMinimum(CenterMin - nExpend);
                 }
             }
-
             // 在另一个线程中调用postInvalidate()方法
             chart.invalidate();
         });

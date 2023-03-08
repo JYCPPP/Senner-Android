@@ -21,8 +21,14 @@ import com.github.mikephil.charting.data.Entry;
 
 import org.opencv.core.Point;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -61,6 +67,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     private float TARGETSIZE = 20;
     private float histGray = 0.38F;
     private boolean isDebug = false;
+    public File DisData;
 
     public ImageAnalyse(PreviewView previewView,
                         ImageView boxLabelCanvas,
@@ -199,8 +206,30 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                             SecondStageProcess.SecondStageResult s = secondStageProcess.Process(secondStageBitmap, cornerPoints);
 
                             if(IsRecording){
-                                LocationX.add(new Entry((float) (start - record), (float) (s.centerPoint.x * s.Ratio.width)));
-                                LocationY.add(new Entry((float) (start - record), (float) (s.centerPoint.y * s.Ratio.height)));
+
+                                double DisX = s.centerPoint.x * s.Ratio.width;
+                                double DisY = s.centerPoint.y * s.Ratio.height;
+                                LocationX.add(new Entry((float) (start - record), (float) DisX));
+                                LocationY.add(new Entry((float) (start - record), (float) DisY));
+                                // 这里开始将数据保存到文件中
+                                try {
+                                    //打开文件输出流
+                                    FileOutputStream AccDataOutputStream = new FileOutputStream(DisData, true);
+                                    //第二个参数表示追加写入
+                                    //写入数据
+                                    //时间
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    sdf.setTimeZone(TimeZone.getTimeZone("GMT+8")); // 将时区设置为东八区
+                                    Date currentDate = new Date();
+                                    String currentTime = sdf.format(currentDate.getTime());
+                                    String data = currentTime + " " + DisX + " " + DisY + "\n";
+                                    AccDataOutputStream.write(data.getBytes());
+                                    // 将文件写入 outputStream
+                                    AccDataOutputStream.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
 
                             cropCanvas.drawBitmap(s.ProcessedImage, ROI.left, ROI.top, bitmapPaint);
@@ -229,29 +258,7 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     public void clearLocation(){
             LocationX.clear();
             LocationY.clear();
-
     }
 
-
-//    private float[] CaculateScale(Activity activity, int previewWidth, int previewHeight) {
-//
-//        //计算屏幕像素与物理尺寸的比例
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//
-//        // 获取屏幕的物理尺寸，单位是英寸
-//        float widthInInches = displayMetrics.widthPixels / displayMetrics.xdpi;
-//        float heightInInches = displayMetrics.heightPixels / displayMetrics.ydpi;
-//
-//        float heightInMm = heightInInches * 25.4f; // 英寸转毫米
-//        float widthInMm = widthInInches * 25.4f;
-//        Log.e("Screen Size", Arrays.toString(new float[]{widthInMm, heightInMm}));
-//
-//        float scaleX = widthInMm / previewWidth;
-//        float scaleY = heightInMm / previewHeight;
-//
-//        return new float[]{scaleX, scaleY};
-//
-//    }
 
 }

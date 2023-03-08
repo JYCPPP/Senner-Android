@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    private void CheckObjectDetectionOptionState(Switch useObjectDetection, Switch isObjectDetectionDebugMode, EditText histGray, EditText targetSize, String object_detectionName) {
+    private void CheckObjectDetectionOptionState(@SuppressLint("UseSwitchCompatOrMaterialCode") Switch useObjectDetection, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch isObjectDetectionDebugMode, EditText histGray, EditText targetSize, String object_detectionName) {
 
         if(useObjectDetection.isChecked()&& !histGray.getText().toString().isEmpty() && !targetSize.getText().toString().isEmpty()){
 
