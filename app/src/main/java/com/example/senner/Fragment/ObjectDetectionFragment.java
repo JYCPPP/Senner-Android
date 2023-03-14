@@ -36,6 +36,7 @@ import com.example.senner.Helper.SharedPreferenceHelper;
 import com.example.senner.Helper.Yolov5TFLiteDetector;
 import com.example.senner.R;
 import com.example.senner.UI.ChartView;
+import com.example.senner.UI.RealtimeMonitoringResult;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
@@ -65,7 +66,7 @@ public final class ObjectDetectionFragment extends Fragment  {
     private Button recordButton;
     private boolean IsClickRecording = false;
     private LineChart disChart;
-    private final ChartView chartView = new ChartView();
+    private ChartView chartView;
 
     // 参数相关
     private SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
@@ -119,12 +120,15 @@ public final class ObjectDetectionFragment extends Fragment  {
                 String model = (String) adapterView.getItemAtPosition(i);
                 initModel(model);
                     imageAnalyse = new ImageAnalyse(
+                            requireActivity(),
                             cameraPreviewMatch,
                             boxLabelCanvas,
                             rotation,
                             inferenceTimeTextView,
                             frameSizeTextView,
                             yolov5TFLiteDetector,
+                            disChart,
+                            chartView,
                             histGray,
                             targetSize,
                             isDebugMode);
@@ -139,15 +143,14 @@ public final class ObjectDetectionFragment extends Fragment  {
 
         camera = view.findViewById(R.id.camera);
         recordButton = view.findViewById(R.id.btn_record);
-        //初始化折线图，设置图例
         disChart = view.findViewById(R.id.disChart);
-        LegendEntry legendEntry_locX = new LegendEntry("LocationX(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.RED);
-        LegendEntry legendEntry_locY = new LegendEntry("LocationY(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.GREEN);
-        List<LegendEntry> entries_location = new ArrayList<>();
-        entries_location.add(legendEntry_locX);
-        entries_location.add(legendEntry_locY);
-        chartView.InitWhiteChartView(disChart, 5, 0, entries_location);
-
+        chartView = new ChartView();
+        LegendEntry disX = new LegendEntry("DisX(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.RED);
+        LegendEntry disY = new LegendEntry("DisY(mm)", Legend.LegendForm.LINE, 12f, 2f, null, Color.YELLOW);
+        List<LegendEntry> entries_dis = new ArrayList<>();
+        entries_dis.add(disX);
+        entries_dis.add(disY);
+        chartView.InitDisChartView(disChart, 10, 0, entries_dis);
     }
 
     /**
@@ -183,14 +186,13 @@ public final class ObjectDetectionFragment extends Fragment  {
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void SetRecordEvent() {
-
         recordButton.setOnClickListener(v -> {
 
             Vibrate(50);
 
             if(!IsClickRecording){
                 //保证绘制完毕再清除
-                imageAnalyse.clearLocation();
+                imageAnalyse.ClearData();
                 IsClickRecording = true;
                 recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_stop_36dp));
                 imageAnalyse.record = System.currentTimeMillis();
@@ -207,85 +209,10 @@ public final class ObjectDetectionFragment extends Fragment  {
                 IsClickRecording = false;
                 recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_record_36dp));
                 imageAnalyse.IsRecording = false;
-                ShowDisLineChart();
             }
         });
 
     }
-
-    /**
-     *依次实现以下功能：拿到imageAnalyse记录的框位移数据、将数据赋给表格、清除所有历史数据
-     */
-    private void ShowDisLineChart() {
-        chartView.SetDisplacementChartData(requireActivity(), disChart, imageAnalyse.getLocationX(), imageAnalyse.getLocationY() , "Pixel LocationX", "Pixel LocationY", Color.RED, Color.GREEN, true);
-
-    }
-
-//    @SuppressLint("ClickableViewAccessibility")
-//    private void setMenuView() {
-//        //主线程执行避免阻塞
-//        Handler handler = new Handler(Looper.getMainLooper());
-//        handler.post(() -> camera.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    posY = event.getRawY();
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    curPosY = event.getRawY();
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    if ((curPosY - posY > 0) && (Math.abs(curPosY - posY) > 25)) {
-//                        if (!isSheetOpen) {
-//                            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_down);
-//                            //设置背景隐藏
-//                            camera.setClickable(false);
-//                            camera.setFocusable(false);
-//                            camera.setVisibility(View.INVISIBLE);
-//                            //设置菜单可视
-//                            menu.setVisibility(View.VISIBLE);
-//                            menu.startAnimation(animation);
-//                            menu.setFocusable(true);
-//                            menu.setClickable(true);
-//                            isSheetOpen = true;
-//                            arrow.setImageResource(R.drawable.round_arrow_up_48dp);
-//
-//                            menu.setOnTouchListener((sheet, slide) -> {
-//                                switch (slide.getAction()) {
-//                                    case MotionEvent.ACTION_DOWN:
-//                                        posY = slide.getRawY();
-//                                        break;
-//                                    case MotionEvent.ACTION_MOVE:
-//                                        curPosY = slide.getRawY();
-//                                        break;
-//                                    case MotionEvent.ACTION_UP:
-//                                        if ((curPosY - posY < 0) && (Math.abs(curPosY - posY) > 25)) {
-//                                            if (isSheetOpen) {
-//                                                animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.camera_menu_up);
-//                                                //设置背景显示
-//                                                camera.setClickable(true);
-//                                                camera.setFocusable(true);
-//                                                camera.setVisibility(View.VISIBLE);
-//                                                //设置菜单隐藏
-//                                                menu.startAnimation(animation);
-//                                                menu.setVisibility(View.INVISIBLE);
-//                                                menu.setClickable(false);
-//                                                menu.setFocusable(false);
-//                                                arrow.setImageResource(R.drawable.round_arrow_down_48dp);
-//                                                isSheetOpen = false;
-//                                            }
-//                                        }
-//                                        break;
-//                                }
-//                                return true;
-//                            });
-//                        }
-//                    }
-//                    break;
-//            }
-//            return true;
-//        }));
-//    }
-
 
     //Switch back will do this:
     @Override
@@ -294,21 +221,24 @@ public final class ObjectDetectionFragment extends Fragment  {
         super.onResume();
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-
             imageAnalyse = new ImageAnalyse(
+                    requireActivity(),
                     cameraPreviewMatch,
                     boxLabelCanvas,
                     rotation,
                     inferenceTimeTextView,
                     frameSizeTextView,
                     yolov5TFLiteDetector,
+                    disChart,
+                    chartView,
                     histGray,
                     targetSize,
                     isDebugMode);
-
             if (isVisible() && imageAnalyse != null && cameraPreviewMatch != null) {
                 cameraProcess.startCamera(requireActivity(), imageAnalyse, cameraPreviewMatch);
             }
+
+            SetRecordEvent();
         } else {
             // Permission is not granted, request it
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, 0);
@@ -339,18 +269,26 @@ public final class ObjectDetectionFragment extends Fragment  {
     }
 
     //Switch will do this:
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onPause() {
-
         boxLabelCanvas.setImageBitmap(null);
         cameraProcess.stopCamera(requireActivity());
+        IsClickRecording = false;
+        recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_record_36dp));
+        imageAnalyse.IsRecording = false;
+        imageAnalyse.ClearData();
         super.onPause();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onStop() {
-
         cameraProcess.stopCamera(requireActivity());
+        IsClickRecording = false;
+        recordButton.setBackground(requireActivity().getDrawable(R.drawable.round_record_36dp));
+        imageAnalyse.IsRecording = false;
+        imageAnalyse.ClearData();
         super.onStop();
 
     }

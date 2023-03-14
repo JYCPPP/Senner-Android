@@ -140,7 +140,7 @@ public class ChartView {
 
     }
 
-    public void InitWhiteChartView(LineChart lineChart, float MaxValue, float MinValue,  List<LegendEntry> legendEntries){
+    public void InitDisChartView(LineChart lineChart, float MaxValue, float MinValue,  List<LegendEntry> legendEntries){
 
         //设置表样式
         //绘制区域边框、设置边框颜色、边框宽度
@@ -281,7 +281,82 @@ public class ChartView {
         yAxis.addLimitLine(limitLine2);
         lineChart.invalidate();
     }
+    /**
+     *
+     * @param chart 所需传数据折线图
+     * @param values0 储存第一组数据的列表
+     * @param values1 储存第二组数据的列表
+     * @param value0 第一组数据
+     * @param value1 第二组数据
+     * @param string0 第一组数据名称
+     * @param string1 第二组数据名称
+     * @param color0 第一组折线颜色
+     * @param color1 第二组折线颜色
+     * @param isShowValueText 是否显示数据
+     */
+    public void SetLineChartData(LineChart chart,
+                                 ArrayList<Entry> values0, ArrayList<Entry> values1,
+                                 long time,
+                                 float value0, float value1,
+                                 String string0, String string1,
+                                 int color0, int color1,
+                                 boolean isShowValueText) {
 
+            float timeF = time / 1000F;
+            values0.add(new Entry(timeF, value0));
+            values1.add(new Entry(timeF, value1));
+
+            LineData lineData = chart.getData();
+
+            if (lineData == null) {
+
+                LineDataSet set0 = new LineDataSet(values0, string0);
+                LineDataSet set1 = new LineDataSet(values1, string1);
+
+                setLineDataSet(set0, color0, isShowValueText);
+                setLineDataSet(set1, color1, isShowValueText);
+
+                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                dataSets.add(set0);
+                dataSets.add(set1);
+
+                lineData = new LineData(dataSets);
+                chart.setData(lineData);
+
+            } else {
+
+                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(0), color0, isShowValueText);
+                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(1), color1, isShowValueText);
+
+                //移动图表到最新的数据点位置
+                lineData.notifyDataChanged();
+                chart.notifyDataSetChanged();
+            }
+
+
+            YAxis yAxis = chart.getAxisLeft();
+
+            float maxY = yAxis.getAxisMaximum();
+            float minY = yAxis.getAxisMinimum();
+
+            float valueMax = Math.max(value0, value1);
+            float valueMin = Math.min(value0, value1);
+            float nExpend = 1;
+
+            if (maxY == 0 || minY == 0) {
+                yAxis.setAxisMaximum(valueMax + nExpend);
+                yAxis.setAxisMinimum(valueMin - nExpend);
+
+            } else {
+                if(maxY < valueMax)
+                    yAxis.setAxisMaximum(valueMax + nExpend);
+                if(minY > valueMin)
+                    yAxis.setAxisMinimum(valueMin - nExpend);
+
+            }
+            chart.postInvalidate();
+
+    }
     /**
      *
      * @param chart 所需传数据折线图
@@ -379,7 +454,7 @@ public class ChartView {
         set.setColor(color);
         set.setValueTextColor(color);
         set.setCircleColor(color);
-        set.setLineWidth(2f);
+        set.setLineWidth(3f);
         set.setCircleRadius(1f);
 
         if (!isShowValueText) {
@@ -388,134 +463,7 @@ public class ChartView {
 
         set.notifyDataSetChanged();
     }
-    /**
-     *
-     * @param chart 所需传数据折线图
-     * @param values0 储存第一组数据的列表
-     * @param values1 储存第二组数据的列表
-     * @param string0 第一组数据名称
-     * @param string1 第二组数据名称
-     * @param color0 第一组折线颜色
-     * @param color1 第二组折线颜色
-     * @param isShowValueText 是否显示数据
-     */
-    public void SetDisplacementChartData(Activity activity, LineChart chart,
-                                 ArrayList<Entry> values0, ArrayList<Entry> values1,
-                                 String string0, String string1,
-                                 int color0, int color1,
-                                 boolean isShowValueText)
-    {
 
-        activity.runOnUiThread(() -> {
-
-            LineData lineData = chart.getData();
-
-            if (lineData == null) {
-                LineDataSet set0 = new LineDataSet(values0, string0);
-                LineDataSet set1 = new LineDataSet(values1, string1);
-
-                setLineDataSet(set0, color0, isShowValueText);
-                setLineDataSet(set1, color1, isShowValueText);
-
-                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-                dataSets.add(set0);
-                dataSets.add(set1);
-
-                lineData = new LineData(dataSets);
-                chart.setData(lineData);
-
-            } else {
-                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(0), color0, isShowValueText);
-                setLineDataSet((LineDataSet) lineData.getDataSetByIndex(1), color1, isShowValueText);
-                // 移动图表到最新的数据点位置
-                float lastX  = Math.max(chart.getData().getDataSetByIndex(0).getEntryCount() - 1, chart.getData().getDataSetByIndex(1).getEntryCount() - 1);
-                if (lastX > MAX_VISIBLE_RANGE) {
-                    chart.getXAxis().setAxisMinimum(lastX - MAX_VISIBLE_RANGE);
-                }
-                lineData.notifyDataChanged();
-                chart.notifyDataSetChanged();
-            }
-
-
-            YAxis y = chart.getAxisLeft();
-            XAxis x = chart.getXAxis();
-
-            float XMax = x.getAxisMinimum();
-            float XMin = x.getAxisMaximum();
-            float YMax = y.getAxisMaximum();
-            float YMin = y.getAxisMinimum();
-
-            //遍历找到
-            float maxCenterX = 0;
-            float maxTimeX = 0;
-            float minCenterX = 0;
-            float minTimeX = 0;
-            for (Entry entry : values0) {
-                if (entry.getY() > maxCenterX) {
-                    maxCenterX = entry.getY();
-                }
-                if(entry.getX() > maxTimeX){
-                    maxTimeX = entry.getX();
-                }
-                if(entry.getY() < minCenterX){
-                    minCenterX = entry.getY();
-                }
-                if(entry.getX() < minTimeX){
-                    minTimeX = entry.getX();
-                }
-            }
-
-            //遍历找到
-            float maxCenterY = 0;
-            float maxTimeY = 0;
-            float minCenterY = 0;
-            float minTimeY = 0;
-            for (Entry entry : values1) {
-                if (entry.getY() > maxCenterY) {
-                    maxCenterY = entry.getY();
-                }
-                if(entry.getX() > maxTimeY){
-                    maxTimeY = entry.getX();
-                }
-                if(entry.getY() < minCenterY){
-                    minCenterY = entry.getY();
-                }
-                if(entry.getX() < minTimeY){
-                    minTimeY = entry.getX();
-                }
-            }
-
-            float CenterMax = Math.max(maxCenterX, maxCenterY);
-            float CenterMin = Math.min(minCenterX, minCenterY);
-            float TimeMax = Math.max(maxTimeX, maxTimeY);
-            float TimeMin = Math.min(minTimeX, minTimeY);
-
-            float nExpend = 1;//保证曲线始终全部显示
-
-            if(YMax == 0 && YMin == 0 && XMax == 0 && XMin == 0){
-                x.setAxisMinimum(TimeMin - nExpend);
-                x.setAxisMaximum(TimeMax + nExpend);
-                y.setAxisMaximum(CenterMax + nExpend);
-                y.setAxisMinimum(CenterMin - nExpend);
-            }else {
-                if(TimeMax > XMax){
-                    x.setAxisMaximum(TimeMax + nExpend);
-                }
-                if(TimeMin < XMin){
-                    x.setAxisMinimum(TimeMin - nExpend);
-                }
-                if (CenterMax > YMax) {
-                    y.setAxisMaximum(CenterMax + nExpend);
-                }
-                if (CenterMin < YMin) {
-                    y.setAxisMinimum(CenterMin - nExpend);
-                }
-            }
-            // 在另一个线程中调用postInvalidate()方法
-            chart.invalidate();
-        });
-
-    }
     /**
      *
      * @param chart 所需传入数据折线图

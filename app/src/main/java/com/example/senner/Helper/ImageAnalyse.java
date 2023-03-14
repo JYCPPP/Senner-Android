@@ -17,6 +17,8 @@ import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.view.PreviewView;
 
+import com.example.senner.UI.ChartView;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 
 import org.opencv.core.Point;
@@ -59,9 +61,6 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     FirstStageProcess firstStageProcess;
     private Yolov5TFLiteDetector yolov5TFLiteDetector;
 
-    //在保证性能的前提下，应分配初始容量
-    private ArrayList<Entry> LocationX = new ArrayList<>(10000);
-    private ArrayList<Entry> LocationY = new ArrayList<>(10000);
     public boolean IsRecording = false;
     public long record;
     private float TARGETSIZE = 20;
@@ -69,15 +68,24 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
     private boolean isDebug = false;
     public File DisData;
 
-    public ImageAnalyse(PreviewView previewView,
+    ArrayList<Entry> DisX = new ArrayList<>();
+    ArrayList<Entry> DisY = new ArrayList<>();
+    private LineChart disChart;
+    private ChartView chartView;
+    private Activity activity;
+    public ImageAnalyse(Activity activity,
+                        PreviewView previewView,
                         ImageView boxLabelCanvas,
                         int rotation,
                         TextView inferenceTimeTextView,
                         TextView frameSizeTextView,
                         Yolov5TFLiteDetector yolov5TFLiteDetector,
+                        LineChart disChart,
+                        ChartView chartView,
                         float histGray,
                         float targetSize,
                         boolean isDebug) {
+        this.activity = activity;
         this.previewView = previewView;
         this.boxLabelCanvas = boxLabelCanvas;
         this.rotation = rotation;
@@ -88,6 +96,8 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
         this.histGray = histGray;
         this.TARGETSIZE = targetSize;
         this.isDebug = isDebug;
+        this.disChart = disChart;
+        this.chartView = chartView;
     }
 
 
@@ -182,59 +192,68 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                     for (Recognition res : recognitions) {
 
                         RectF ROI = res.getLocation();
-                        // 这里进行第一阶段的处理
-                        String label = res.getLabelName();
-                        float confidence = res.getConfidence();
-                        modelToPreviewTransform.mapRect(ROI);
-                        cropCanvas.drawRect(ROI, boxPaint);
-                        cropCanvas.drawText(label + ":" + String.format("%.2f", confidence), ROI.left, ROI.top, textPain);
+                        if(!ROI.isEmpty()){
+                            // 这里进行第一阶段的处理
+                            String label = res.getLabelName();
+                            float confidence = res.getConfidence();
+                            modelToPreviewTransform.mapRect(ROI);
+                            cropCanvas.drawRect(ROI, boxPaint);
+                            cropCanvas.drawText(label + ":" + String.format("%.2f", confidence), ROI.left, ROI.top, textPain);
 
-                        if(confidence > THRESHOLD_CONFINDENCE){
-                            // 在这里进行第二阶段的处理
-                            // 角点的存储数据为左上、右上、左下、右下
-                            List<Point> cornerPoints = new ArrayList<>();
-                            cornerPoints.add(0, new Point(0, 0));
-                            cornerPoints.add(1, new Point(ROI.width(), 0));
-                            cornerPoints.add(2, new Point(0, ROI.height()));
-                            cornerPoints.add(3, new Point(ROI.width(), ROI.height()));
+                            if(confidence > THRESHOLD_CONFINDENCE){
 
-                            // bitmap转化成Mat对象
-                            // 使用一开始的bitmap， 因为模型输入的尺寸经过缩放
-                            Bitmap secondStageBitmap = Bitmap.createBitmap(cropImageBitmap, (int)ROI.left, (int)ROI.top, (int)ROI.width(), (int)ROI.height());
-                            // 提取ROI中的图像
-                            SecondStageProcess secondStageProcess = new SecondStageProcess(histGray, TARGETSIZE, isDebug);
-                            SecondStageProcess.SecondStageResult s = secondStageProcess.Process(secondStageBitmap, cornerPoints);
+                                // 在这里进行第二阶段的处理
+                                // 角点的存储数据为左上、右上、左下、右下
+                                List<Point> cornerPoints = new ArrayList<>();
+                                cornerPoints.add(0, new Point(0, 0));
+                                cornerPoints.add(1, new Point(ROI.width(), 0));
+                                cornerPoints.add(2, new Point(0, ROI.height()));
+                                cornerPoints.add(3, new Point(ROI.width(), ROI.height()));
 
-                            if(IsRecording){
+                                // bitmap转化成Mat对象
+                                // 使用一开始的bitmap， 因为模型输入的尺寸经过缩放
+                                Bitmap secondStageBitmap = Bitmap.createBitmap(cropImageBitmap, (int)ROI.left, (int)ROI.top, (int)ROI.width(), (int)ROI.height());
+                                // 提取ROI中的图像
+                                SecondStageProcess secondStageProcess = new SecondStageProcess(histGray, TARGETSIZE, isDebug);
+                                SecondStageProcess.SecondStageResult s = secondStageProcess.Process(secondStageBitmap, cornerPoints);
 
-                                double DisX = s.centerPoint.x * s.Ratio.width;
-                                double DisY = s.centerPoint.y * s.Ratio.height;
-                                LocationX.add(new Entry((float) (start - record), (float) DisX));
-                                LocationY.add(new Entry((float) (start - record), (float) DisY));
-                                // 这里开始将数据保存到文件中
-                                try {
-                                    //打开文件输出流
-                                    FileOutputStream AccDataOutputStream = new FileOutputStream(DisData, true);
-                                    //第二个参数表示追加写入
-                                    //写入数据
-                                    //时间
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    sdf.setTimeZone(TimeZone.getTimeZone("GMT+8")); // 将时区设置为东八区
-                                    Date currentDate = new Date();
-                                    String currentTime = sdf.format(currentDate.getTime());
-                                    String data = currentTime + " " + DisX + " " + DisY + "\n";
-                                    AccDataOutputStream.write(data.getBytes());
-                                    // 将文件写入 outputStream
-                                    AccDataOutputStream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                // 开始记录，即开始按钮被触发时
+                                if(IsRecording){
+                                    // 开始记录时应该进行如下事件
+                                    // 清空所有容器中存储的数据，并重新存储
+                                    if(s.centerPoint.x != 0 && s.centerPoint.y != 0) {
+                                        chartView.SetLineChartData(disChart, DisX, DisY,
+                                                start - record, (float) ((s.centerPoint.x + ROI.left) * s.Ratio.width), (float) ((s.centerPoint.y + ROI.top) * s.Ratio.height),
+                                                "DisX", "DisY",
+                                                Color.RED, Color.YELLOW,
+                                                true);
+
+                                        // 这里开始将数据保存到文件中
+                                        try {
+                                            // 打开文件输出流
+                                            FileOutputStream AccDataOutputStream = new FileOutputStream(DisData, true);
+                                            // 第二个参数表示追加写入
+                                            // 写入数据
+                                            // 时间
+                                            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                            sdf.setTimeZone(TimeZone.getTimeZone("GMT+8")); // 将时区设置为东八区
+                                            Date currentDate = new Date();
+                                            String currentTime = sdf.format(currentDate.getTime());
+                                            String data = currentTime + " " + (s.centerPoint.x + ROI.left) * s.Ratio.width + " " + (s.centerPoint.y + ROI.top) * s.Ratio.height + "\n";
+                                            AccDataOutputStream.write(data.getBytes());
+                                            // 将文件写入 outputStream
+                                            AccDataOutputStream.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
 
+                                cropCanvas.drawBitmap(s.ProcessedImage, ROI.left, ROI.top, bitmapPaint);
                             }
-
-                            cropCanvas.drawBitmap(s.ProcessedImage, ROI.left, ROI.top, bitmapPaint);
                         }
-                    }
+                        }
+
                     long end = System.currentTimeMillis();
                     long costTime = (end - start);
                     image.close();
@@ -250,14 +269,9 @@ public class ImageAnalyse implements ImageAnalysis.Analyzer {
                 });
 
     }
-    public ArrayList<Entry> getLocationX(){return this.LocationX;}
-    public ArrayList<Entry> getLocationY(){
-        return this.LocationY;
-    }
-
-    public void clearLocation(){
-            LocationX.clear();
-            LocationY.clear();
+    public void ClearData(){
+        DisX.clear();
+        DisY.clear();
     }
 
 

@@ -1,7 +1,6 @@
 package com.example.senner.Helper;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -58,8 +57,6 @@ public class SecondStageProcess {
         for(int i = 0; i < centerPoints.size(); i ++){
             Distances.add(CalculateDistanceTwoPoints(cornerPoint, centerPoints.get(i)));
         }
-        Log.e("Distance", String.valueOf(Distances));
-        Log.e("Distance", String.valueOf(centerPoints));
 
         double temp = Distances.get(0);
         // 创建一个始终指向最小元素的指针
